@@ -1,21 +1,7 @@
 version: '3.5'
 
 services:
-  backend:
-    container_name: spring_boot
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    volumes:
-      - ./:/app
-#      - ./.m2:/root/.m2
-    working_dir: /app
-#    command: sh run.sh
-    ports:
-      - 8080:8080
-      - 35729:35729
-      - 5005:5005
-  db:
+  postgres:
     container_name: pg_container
     image: postgres
     restart: always
@@ -23,7 +9,7 @@ services:
       DATABASE_HOST: 172.0.0.1
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: mytube_db
+      POSTGRES_DB: camp_manager_db
     volumes:
       #- ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
       - ./postgres-data:/var/lib/postgresql/data
@@ -41,3 +27,18 @@ services:
       - ./pgadmin-data:/var/lib/pgadmin
     ports:
       - "5050:80"
+
+  backend:
+    container_name: spring_boot
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app
+    #      - ./.m2:/root/.m2
+    working_dir: /app
+    #    command: sh run.sh
+    ports:
+      - 8080:8080
+      - 35729:35729
+      - 5005:5005
