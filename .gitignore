@@ -1,4 +1,7 @@
 .DS_Store
 .idea
 target
+pgadmin-data
+postgres-data
 run.sh
+docker_postgres_init.sql
