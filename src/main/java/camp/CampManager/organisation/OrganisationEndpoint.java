@@ -2,14 +2,13 @@ package camp.CampManager.organisation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin
-@Controller
+@RestController
 @RequestMapping(value = "/organisation/")
 public class OrganisationEndpoint {
 
@@ -39,9 +38,9 @@ public class OrganisationEndpoint {
 
     @PostMapping(path = "/")
     @ResponseBody
-    public ResponseEntity<Organisation> createOrganisation(@RequestParam("name") String name){
-        organisationService.createOrganisation(name);
-        Optional<Organisation> opt = organisationService.getOrganisationByName(name);
+    public ResponseEntity<Organisation> createOrganisation(@RequestBody Organisation organisation){
+        organisationService.createOrganisation(organisation);
+        Optional<Organisation> opt = organisationService.getOrganisationByName(organisation.getName());
         // This is just an if opt.isPresent return ok else return not found
         return opt.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }

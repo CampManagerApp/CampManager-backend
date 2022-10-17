@@ -12,11 +12,19 @@ public class Organisation {
     @Column
     private String name = null;
 
+    @Column
+    private String admin = null;
+
     public Organisation() {
     }
 
     public Organisation(String name) {
         this.name = name;
+    }
+
+    public Organisation(String name, String admin) {
+        this.name = name;
+        this.admin = admin;
     }
 
     public Long getId() {
@@ -33,5 +41,13 @@ public class Organisation {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(String admin) {
+        this.admin = admin;
     }
 }

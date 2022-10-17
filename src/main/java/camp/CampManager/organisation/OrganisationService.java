@@ -26,8 +26,8 @@ public class OrganisationService {
         organisationRepository.deleteById(id);
     }
 
-    public void createOrganisation(String name){
-        organisationRepository.save(new Organisation(name));
+    public void createOrganisation(Organisation organisation){
+        organisationRepository.save(organisation);
     }
 
     public boolean updateOrganisation(Long id, String name) {
