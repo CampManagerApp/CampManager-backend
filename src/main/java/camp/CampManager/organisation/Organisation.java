@@ -1,16 +1,16 @@
 package camp.CampManager.organisation;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import camp.CampManager.users.User;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Organisation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "organisation_gen")
@@ -22,6 +22,8 @@ public class Organisation {
 
     @Column
     private String admin = null;
+
+    private Collection<User> members;
 
     public Organisation(String name) {
         this.name = name;
