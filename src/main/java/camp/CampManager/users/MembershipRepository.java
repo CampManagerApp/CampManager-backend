@@ -2,5 +2,5 @@ package camp.CampManager.users;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface RoleRepository extends CrudRepository<Role, Long> {
+public interface MembershipRepository extends CrudRepository<Membership, Long> {
 }

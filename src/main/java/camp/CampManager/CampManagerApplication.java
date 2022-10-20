@@ -2,15 +2,12 @@ package camp.CampManager;
 
 import camp.CampManager.organisation.Organisation;
 import camp.CampManager.organisation.OrganisationService;
-import camp.CampManager.users.Role;
 import camp.CampManager.users.User;
 import camp.CampManager.users.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import java.util.LinkedList;
 
 @SpringBootApplication
 public class CampManagerApplication {
@@ -21,21 +18,25 @@ public class CampManagerApplication {
     @Bean
     CommandLineRunner run(UserService userService, OrganisationService organisationService) {
         return args -> {
-            var org1 = new Organisation(null, "organisation1", null, new LinkedList<>());
-            var org2 = new Organisation(null, "organisation2", null, new LinkedList<>());
-            organisationService.createOrganisation(org1);
-            organisationService.createOrganisation(org2);
+            User jim = User.builder().email("jim@dundermifflin.com").username("jimhalpert").build();
+            userService.saveUser(jim);
 
-            var role1 = new Role(null, org1, null, "ROLE_BASIC");
-            var role2 = new Role(null, org2, null, "ROLE_ADMIN");
-            userService.saveRole(role1);
-            userService.saveRole(role2);
+            User dwight = User.builder().email("dwight@dundermifflin.com").username("dwighschrute").build();
+            userService.saveUser(dwight);
 
-            var user = User.builder().username("usuari").password("password").roles(new LinkedList<>()).build();
-            userService.saveUser(user);
+            Organisation dunder = Organisation.builder().name("Dunder").build();
+            organisationService.createOrganisation(dunder);
 
-            userService.addRoleToUser(user, role1);
-            userService.addRoleToUser(user, role2);
+            Organisation mifflin = Organisation.builder().name("Mifflin").build();
+            organisationService.createOrganisation(mifflin);
+
+            userService.addMembershipToUser(jim.getId(), dunder.getId(), "USER");
+            userService.addMembershipToUser(jim.getId(), dunder.getId(), "BOSS");
+            userService.addMembershipToUser(dwight.getId(), dunder.getId(), "USER");
+
+            userService.addMembershipToUser(jim.getId(), mifflin.getId(), "USER");
+            userService.addMembershipToUser(dwight.getId(), mifflin.getId(), "BOSS");
+            userService.addMembershipToUser(dwight.getId(), mifflin.getId(), "USER");
         };
     }
 }

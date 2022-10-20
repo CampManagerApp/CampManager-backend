@@ -3,15 +3,12 @@ package camp.CampManager.users;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedList;
+import java.util.*;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
 public class User {
@@ -27,6 +24,6 @@ public class User {
     private String full_name;
     private Gender gender;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles = new LinkedList<>();
+    @OneToMany(mappedBy = "user", targetEntity = Membership.class, fetch = FetchType.EAGER)
+    Set<Membership> organisations;
 }
