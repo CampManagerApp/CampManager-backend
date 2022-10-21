@@ -8,6 +8,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 public class CampManagerApplication {
@@ -15,13 +17,16 @@ public class CampManagerApplication {
     public static void main(String[] args) {
         SpringApplication.run(CampManagerApplication.class, args);
     }
+
     @Bean
     CommandLineRunner run(UserService userService, OrganisationService organisationService) {
         return args -> {
-            User jim = User.builder().email("jim@dundermifflin.com").username("jimhalpert").build();
+            PasswordEncoder bCrypt = passwordEncoder();
+
+            User jim = User.builder().email("jim@dundermifflin.com").username("jimhalpert").password(bCrypt.encode("jim")).build();
             userService.saveUser(jim);
 
-            User dwight = User.builder().email("dwight@dundermifflin.com").username("dwighschrute").build();
+            User dwight = User.builder().email("dwight@dundermifflin.com").username("dwightschrute").password(bCrypt.encode("dw")).build();
             userService.saveUser(dwight);
 
             Organisation dunder = Organisation.builder().name("Dunder").build();
@@ -38,5 +43,10 @@ public class CampManagerApplication {
             userService.addMembershipToUser(dwight.getId(), mifflin.getId(), "BOSS");
             userService.addMembershipToUser(dwight.getId(), mifflin.getId(), "USER");
         };
+    }
+
+    @Bean
+    BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

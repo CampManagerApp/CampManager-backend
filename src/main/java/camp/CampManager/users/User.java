@@ -11,6 +11,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +25,6 @@ public class User {
     private String full_name;
     private Gender gender;
 
-    @OneToMany(mappedBy = "user", targetEntity = Membership.class, fetch = FetchType.EAGER)
-    Set<Membership> organisations;
+    // @OneToMany(mappedBy = "user", targetEntity = Membership.class, fetch = FetchType.EAGER)
+    // Set<Membership> organisations;
 }

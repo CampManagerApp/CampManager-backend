@@ -12,7 +12,22 @@ import java.util.Set;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "membership")
 public class Membership {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+/*
     @EmbeddedId
     MembershipKey id;
 
@@ -30,4 +45,5 @@ public class Membership {
     @Column
     @ElementCollection(targetClass = String.class)
     Set<String> roles;
+     */
 }

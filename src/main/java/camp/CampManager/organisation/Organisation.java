@@ -15,6 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "organisations")
 public class Organisation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "organisation_gen")
@@ -27,8 +28,8 @@ public class Organisation {
     @Column
     private String admin = null;
 
-    @OneToMany(mappedBy = "organisation", targetEntity = Membership.class, fetch = FetchType.EAGER)
-    Set<Membership> members;
+    // @OneToMany(mappedBy = "organisation", targetEntity = Membership.class, fetch = FetchType.EAGER)
+    // Set<Membership> members;
 
     public Organisation(String name) {
         this.name = name;
