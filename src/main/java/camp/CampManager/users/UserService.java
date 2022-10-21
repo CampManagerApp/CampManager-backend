@@ -31,7 +31,9 @@ public class UserService implements UserDetailsService {
     }
 
     public void addOrganisationToUser(User user, Organisation organisation){
-        user.organisations.add(organisation);
+        var membership = new Membership(null, user, organisation, new HashSet<>());
+        user.organisations.add(membership);
+        organisation.getMembers().add(membership);
     }
 
     public void addMembershipToUser(Long user_id, Long org_n, String role) {
@@ -40,7 +42,7 @@ public class UserService implements UserDetailsService {
         if(user_o.isPresent() && org_o.isPresent()){
             User user = user_o.get();
             Organisation org = org_o.get();
-            user.organisations.add(org);
+            user.organisations.add(new Membership(null, user, org, new HashSet<>(Collections.singleton(role))));
         }
     }
 

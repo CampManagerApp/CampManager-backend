@@ -9,10 +9,15 @@ import java.io.Serializable;
 @Embeddable
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
 public class MembershipKey implements Serializable {
+
+    public MembershipKey(Long userId, Long orgId){
+        super();
+        this.userId = userId;
+        this.orgId = orgId;
+    }
 
     @Column
     Long userId;

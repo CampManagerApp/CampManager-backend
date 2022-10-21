@@ -28,8 +28,9 @@ public class Organisation {
     @Column
     private String admin = null;
 
-    @ManyToMany(mappedBy = "organisations")
-    Set<User> members;
+    @OneToMany(mappedBy = "organisation")
+    @ElementCollection(targetClass=Membership.class)
+    Set<Membership> members;
 
     public Organisation(String name) {
         this.name = name;

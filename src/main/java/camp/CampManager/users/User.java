@@ -26,11 +26,7 @@ public class User {
     private String full_name;
     private Gender gender;
 
-    @ManyToMany()
-    @JoinTable(
-        name = "users_organisations",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "organisation_id")
-    )
-    Set<Organisation> organisations;
+    @OneToMany(mappedBy = "user")
+    @ElementCollection(targetClass=Membership.class)
+    Set<Membership> organisations;
 }

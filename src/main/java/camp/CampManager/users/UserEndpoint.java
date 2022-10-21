@@ -34,7 +34,7 @@ public class UserEndpoint {
                             .full_name(user.getFull_name())
                             .gender(user.getGender());
                     var orgs = new LinkedList<String>();
-                    user.organisations.forEach(o -> orgs.add(o.getName()));
+                    user.organisations.forEach(o -> orgs.add(o.organisation.getName()));
                     usr.organisations(orgs);
                     usersList.add(usr.build());
                 }

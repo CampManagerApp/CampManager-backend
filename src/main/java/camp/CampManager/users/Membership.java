@@ -12,38 +12,21 @@ import java.util.Set;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "membership")
 public class Membership {
+    @EmbeddedId MembershipKey id = new MembershipKey();
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-/*
-    @EmbeddedId
-    MembershipKey id;
-
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @MapsId("userId")
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "student_id")
     User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @MapsId("orgId")
-    @JoinColumn(name = "org_id")
+    @JoinColumn(name = "organisation_id")
     Organisation organisation;
 
-    // "MEMBER", "DMIN", or both
+    // "MEMBER", "ADMIN", or both
     @Column
     @ElementCollection(targetClass = String.class)
     Set<String> roles;
-     */
 }
