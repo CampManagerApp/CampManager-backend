@@ -28,8 +28,8 @@ public class Organisation {
     @Column
     private String admin = null;
 
-    // @OneToMany(mappedBy = "organisation", targetEntity = Membership.class, fetch = FetchType.EAGER)
-    // Set<Membership> members;
+    @ManyToMany(mappedBy = "organisations")
+    Set<User> members;
 
     public Organisation(String name) {
         this.name = name;

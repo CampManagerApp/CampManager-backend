@@ -5,12 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/user/")
+@RequestMapping(value = "/")
 public class UserEndpoint {
 
     @Autowired
@@ -18,8 +20,26 @@ public class UserEndpoint {
 
     @GetMapping(path = "/")
     @ResponseBody
-    public ResponseEntity<List<User>> getUsers() {
-        return ResponseEntity.ok(userService.getUsers());
+    public ResponseEntity<List<DisplayUser>> getUsers() {
+        var users = userService.getUsers();
+        var usersList = new LinkedList<DisplayUser>();
+        users.forEach(
+                user -> {
+                    var usr = DisplayUser.builder().
+                            id(user.getId()).
+                            username(user.getUsername())
+                            .password(user.getPassword())
+                            .email(user.getEmail())
+                            .date_of_birth(user.getDate_of_birth())
+                            .full_name(user.getFull_name())
+                            .gender(user.getGender());
+                    var orgs = new LinkedList<String>();
+                    user.organisations.forEach(o -> orgs.add(o.getName()));
+                    usr.organisations(orgs);
+                    usersList.add(usr.build());
+                }
+        );
+        return ResponseEntity.ok(usersList);
     }
 
     @PostMapping(path = "/role/")

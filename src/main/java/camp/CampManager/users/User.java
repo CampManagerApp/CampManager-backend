@@ -1,5 +1,6 @@
 package camp.CampManager.users;
 
+import camp.CampManager.organisation.Organisation;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,6 +26,11 @@ public class User {
     private String full_name;
     private Gender gender;
 
-    // @OneToMany(mappedBy = "user", targetEntity = Membership.class, fetch = FetchType.EAGER)
-    // Set<Membership> organisations;
+    @ManyToMany()
+    @JoinTable(
+        name = "users_organisations",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "organisation_id")
+    )
+    Set<Organisation> organisations;
 }
