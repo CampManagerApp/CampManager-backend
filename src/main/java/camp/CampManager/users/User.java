@@ -18,15 +18,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-
     private String username;
     private String password;
     private String email;
     private Date date_of_birth;
     private String full_name;
     private Gender gender;
-
-    @OneToMany(mappedBy = "user")
-    @ElementCollection(targetClass=Membership.class)
-    Set<Membership> organisations;
+    private String role;
 }

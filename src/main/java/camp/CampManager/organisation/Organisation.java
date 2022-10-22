@@ -1,7 +1,5 @@
 package camp.CampManager.organisation;
 
-import camp.CampManager.users.Membership;
-import camp.CampManager.users.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,9 +26,10 @@ public class Organisation {
     @Column
     private String admin = null;
 
+    /*
     @OneToMany(mappedBy = "organisation")
     @ElementCollection(targetClass=Membership.class)
-    Set<Membership> members;
+    Set<Membership> members;*/
 
     public Organisation(String name) {
         this.name = name;

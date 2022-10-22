@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
 
+/*
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,3 +31,4 @@ public class Membership {
     @ElementCollection(targetClass = String.class)
     Set<String> roles;
 }
+ */

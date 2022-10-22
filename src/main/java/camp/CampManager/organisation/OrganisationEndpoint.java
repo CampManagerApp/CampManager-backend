@@ -48,8 +48,8 @@ public class OrganisationEndpoint {
     @PutMapping(path = "/{id}")
     @ResponseBody
     public ResponseEntity<Organisation> updateOrganisation(@PathVariable("id") Long id,
-                                                           @RequestParam("name") String name){
-        if(organisationService.updateOrganisation(id, name)){
+                                                           @RequestBody Organisation organisation){
+        if(organisationService.updateOrganisation(id, organisation)){
             Optional<Organisation> opt = organisationService.getOrganisationById(id);
             if (opt.isPresent()){
                 return ResponseEntity.ok(opt.get());

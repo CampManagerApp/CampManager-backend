@@ -14,7 +14,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping(value = "/")
 public class UserEndpoint {
-
+    /*
     @Autowired
     public UserService userService;
 
@@ -50,4 +50,6 @@ public class UserEndpoint {
         userService.addMembershipToUser(user_id, org_id, role);
         return ResponseEntity.ok("Good");
     }
+
+     */
 }
