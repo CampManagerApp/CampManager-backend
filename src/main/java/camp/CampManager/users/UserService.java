@@ -15,7 +15,7 @@ import java.util.*;
 
 @Service
 @Transactional
-public class UserService { //implements UserDetailsService {
+public class UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -28,4 +28,5 @@ public class UserService { //implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
+
 }

@@ -50,6 +50,5 @@ public class UserEndpoint {
         userService.addMembershipToUser(user_id, org_id, role);
         return ResponseEntity.ok("Good");
     }
-
      */
 }

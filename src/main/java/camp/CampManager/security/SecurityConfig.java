@@ -1,8 +1,10 @@
 package camp.CampManager.security;
 
 import camp.CampManager.filter.CustomAuthenticationFilter;
+import camp.CampManager.filter.CustomAuthorizationFilter;
 import camp.CampManager.users.User;
 import camp.CampManager.users.UserRepository;
+import camp.CampManager.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.List;
 
@@ -56,12 +59,14 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/login/**").permitAll()
+                .antMatchers("/organisation/**").hasAuthority("ADMIN")
                 .and()
                 .authorizeRequests()
                 .anyRequest()
                 .authenticated();
 
         http.addFilter(customFilter);
+        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
