@@ -1,6 +1,5 @@
 package camp.CampManager.users;
 
-import camp.CampManager.organisation.Organisation;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,10 +11,11 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "users")
-public class User {
+@Table
+public class CampUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "user_gen", sequenceName = "user_seq")
     @Column(name = "id", nullable = false)
     private Long id;
     private String username;

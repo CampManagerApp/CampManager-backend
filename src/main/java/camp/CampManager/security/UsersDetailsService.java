@@ -1,6 +1,6 @@
 package camp.CampManager.security;
 
-import camp.CampManager.users.User;
+import camp.CampManager.users.CampUser;
 import camp.CampManager.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,15 +20,15 @@ public class UsersDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user_o = userRepository.findByUsername(username);
+        Optional<CampUser> user_o = userRepository.findByUsername(username);
         if (user_o.isPresent()) {
-            User user = user_o.get();
+            CampUser campUser = user_o.get();
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>(
-                    Collections.singleton(new SimpleGrantedAuthority(user.getRole())));
+                    Collections.singleton(new SimpleGrantedAuthority(campUser.getRole())));
             return org.springframework.security.core.userdetails.User
                     .builder()
-                    .username(user.getUsername())
-                    .password(user.getPassword())
+                    .username(campUser.getUsername())
+                    .password(campUser.getPassword())
                     .authorities(authorities)
                     .build();
         }

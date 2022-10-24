@@ -1,6 +1,7 @@
 package camp.CampManager.users;
 
 import camp.CampManager.organisation.Organisation;
+import camp.CampManager.organisation.OrganisationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +15,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping(value = "/")
 public class UserEndpoint {
-    /*
+
     @Autowired
     public UserService userService;
+    @Autowired
+    public OrganisationService organisationService;
 
     @GetMapping(path = "/")
     @ResponseBody
@@ -34,7 +37,12 @@ public class UserEndpoint {
                             .full_name(user.getFull_name())
                             .gender(user.getGender());
                     var orgs = new LinkedList<String>();
-                    user.organisations.forEach(o -> orgs.add(o.organisation.getName()));
+                    /*
+                    user.organisations.forEach(o -> {
+                        var orga = organisationService.getOrganisationById(o.get).get();
+                        orgs.add(orga.getName());
+                    });
+                     */
                     usr.organisations(orgs);
                     usersList.add(usr.build());
                 }
@@ -50,5 +58,4 @@ public class UserEndpoint {
         userService.addMembershipToUser(user_id, org_id, role);
         return ResponseEntity.ok("Good");
     }
-     */
 }

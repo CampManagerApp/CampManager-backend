@@ -1,5 +1,7 @@
 package camp.CampManager.organisation;
 
+import camp.CampManager.users.Membership;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "organisations")
+@Table(name = "organisation")
 public class Organisation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "organisation_gen")
@@ -25,11 +27,6 @@ public class Organisation {
 
     @Column
     private String admin = null;
-
-    /*
-    @OneToMany(mappedBy = "organisation")
-    @ElementCollection(targetClass=Membership.class)
-    Set<Membership> members;*/
 
     public Organisation(String name) {
         this.name = name;

@@ -2,22 +2,18 @@ package camp.CampManager.security;
 
 import camp.CampManager.filter.CustomAuthenticationFilter;
 import camp.CampManager.filter.CustomAuthorizationFilter;
-import camp.CampManager.users.User;
+import camp.CampManager.users.CampUser;
 import camp.CampManager.users.UserRepository;
-import camp.CampManager.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -99,14 +95,14 @@ public class SecurityConfig {
     CommandLineRunner run() {
         return args -> {
             PasswordEncoder bCrypt = passwordEncoder();
-            User admin = User.builder().email("admin@admin.com").username("admin")
+            CampUser admin = CampUser.builder().email("admin@admin.com").username("admin")
                     .password(passwordEncoder().encode("admin")).role("ADMIN").build();
-            User user1 = User.builder().email("jim@dundermifflin.com").username("user1")
+            CampUser campUser1 = CampUser.builder().email("jim@dundermifflin.com").username("user1")
                     .password(passwordEncoder().encode("user1")).role("USER").build();
-            User user2 = User.builder().email("dwight@dundermifflin.com").username("user2")
+            CampUser campUser2 = CampUser.builder().email("dwight@dundermifflin.com").username("user2")
                     .password(passwordEncoder().encode("user2")).role("USER").build();
 
-            userRepository.saveAll(List.of(admin, user1, user2));
+            userRepository.saveAll(List.of(admin, campUser1, campUser2));
         };
     }
 }

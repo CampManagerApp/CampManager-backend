@@ -1,34 +1,31 @@
 package camp.CampManager.users;
 
 import camp.CampManager.organisation.Organisation;
-import camp.CampManager.organisation.OrganisationService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
-/*
 @Entity
+@Getter
+@Setter
+@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
+@Builder
+@Table(name = "membership")
 public class Membership {
-    @EmbeddedId MembershipKey id = new MembershipKey();
+    //@EmbeddedId public MembershipKey id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @MapsId("userId")
-    @JoinColumn(name = "student_id")
-    User user;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @MapsId("orgId")
-    @JoinColumn(name = "organisation_id")
-    Organisation organisation;
+    Long userId;
+    Long organisationId;
 
     // "MEMBER", "ADMIN", or both
     @Column
-    @ElementCollection(targetClass = String.class)
-    Set<String> roles;
+    public boolean is_member = false;
+    public boolean is_admin = false;
 }
- */
