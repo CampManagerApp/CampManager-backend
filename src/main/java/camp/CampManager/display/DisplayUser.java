@@ -1,6 +1,7 @@
-package camp.CampManager.users;
+package camp.CampManager.display;
 
 import camp.CampManager.organisation.Organisation;
+import camp.CampManager.users.Gender;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,5 +25,5 @@ public class DisplayUser {
     private String full_name;
     private Gender gender;
 
-    List<String> organisations;
+    List<DisplayMembershipUser> organisations;
 }

@@ -2,6 +2,10 @@ package camp.CampManager.users;
 
 import camp.CampManager.organisation.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +14,7 @@ import java.util.*;
 
 @Service
 @Transactional
-public class UserService {
+public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -48,5 +52,26 @@ public class UserService {
                     .build();
             membershipRepository.save(membership);
         }
+    }
+
+    public List<Membership> findUserMemberships(CampUser user) {
+        return membershipRepository.findByUserIdEquals(user.getId());
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<CampUser> user_o = userRepository.findByUsername(username);
+        if (user_o.isPresent()) {
+            CampUser campUser = user_o.get();
+            Collection<SimpleGrantedAuthority> authorities = new ArrayList<>(
+                    Collections.singleton(new SimpleGrantedAuthority(campUser.getRole())));
+            return org.springframework.security.core.userdetails.User
+                    .builder()
+                    .username(campUser.getUsername())
+                    .password(campUser.getPassword())
+                    .authorities(authorities)
+                    .build();
+        }
+        throw new UsernameNotFoundException("Username not in db");
     }
 }
