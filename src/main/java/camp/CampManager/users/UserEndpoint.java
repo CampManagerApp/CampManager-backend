@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,17 +40,21 @@ public class UserEndpoint {
 
     @PostMapping(path = "/role/")
     @ResponseBody
-    public ResponseEntity<String> createMembershipToUser(@RequestBody CampUser user,
-                                                         @RequestBody Organisation organisation,
+    public ResponseEntity<String> createMembershipToUser(@RequestParam("username") String username,
+                                                         @RequestParam("orgname") String orgname,
                                                          @RequestParam("is_admin") boolean is_admin,
-                                                         @RequestParam("is_member") boolean is_member) {
-        // !!!! Duplicating pk
-        var membership = Membership.builder()
-                .userId(user.getId())
-                .organisationId(organisation.getId())
-                .is_admin(is_admin)
-                .is_member(is_member)
-                .build();
-        return ResponseEntity.ok("Membership created");
+                                                         @RequestParam("is_member") boolean is_member) throws URISyntaxException {
+        var user_o = userService.findUserByUsername(username);
+        var organisation_o = organisationService.findOrganisationByName(orgname);
+        if (user_o.isEmpty() || organisation_o.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        var user = user_o.get();
+        var organisation = organisation_o.get();
+        if (userService.addMembershipToUser(user, organisation, is_admin, is_member)) {
+            return ResponseEntity.created(new URI("/users/role/")).build();
+        }else{
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

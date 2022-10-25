@@ -18,6 +18,7 @@ public class CampUser {
     @SequenceGenerator(name = "user_gen", sequenceName = "user_seq")
     @Column(name = "id", nullable = false)
     private Long id;
+    @Column(unique = true)
     private String username;
     private String password;
     private String email;

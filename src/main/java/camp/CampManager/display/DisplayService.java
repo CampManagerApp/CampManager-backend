@@ -20,7 +20,6 @@ public class DisplayService {
         var display = DisplayUser.builder().
                 id(user.getId()).
                 username(user.getUsername())
-                .password(user.getPassword())
                 .email(user.getEmail())
                 .date_of_birth(user.getDate_of_birth())
                 .full_name(user.getFull_name())

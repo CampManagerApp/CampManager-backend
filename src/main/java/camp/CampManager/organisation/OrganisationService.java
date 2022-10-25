@@ -41,4 +41,8 @@ public class OrganisationService {
             return false;
         }
     }
+
+    public Optional<Organisation> findOrganisationByName(String orgname) {
+        return organisationRepository.findByName(orgname);
+    }
 }

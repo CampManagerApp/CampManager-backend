@@ -22,7 +22,7 @@ public class Organisation {
     @SequenceGenerator(name = "organisation_gen", sequenceName = "organisation_seq")
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column
+    @Column(unique = true)
     private String name = null;
 
     @Column
