@@ -39,7 +39,7 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(BCryptPasswordEncoder bCryptPasswordEncoder) {
-        return new UserService();
+        return new UsersDetailsService();
     }
 
     @Bean
