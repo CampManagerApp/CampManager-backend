@@ -35,6 +35,7 @@ public class OrganisationService {
         Optional<Organisation> opt = getOrganisationById(id);
         if(opt.isPresent()){
             opt.get().setName(organisation.getName());
+            opt.get().setAdmin(organisation.getAdmin());
             organisationRepository.save(opt.get());
             return true;
         }else{
