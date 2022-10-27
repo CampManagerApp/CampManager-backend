@@ -16,7 +16,7 @@ public class DisplayService {
     @Autowired
     private OrganisationService organisationService;
 
-    public DisplayUser userToDisplay(CampUser user){
+    public DisplayUser userToDisplay(CampUser user) {
         var display = DisplayUser.builder().
                 id(user.getId()).
                 username(user.getUsername())
@@ -26,7 +26,7 @@ public class DisplayService {
                 .gender(user.getGender());
         var displayMemberships = new LinkedList<DisplayMembershipUser>();
         var memberships = userService.findUserMemberships(user);
-        for(Membership membership : memberships){
+        for (Membership membership : memberships) {
             var displayMemb = DisplayMembershipUser.builder();
             var org = organisationService.getOrganisationById(membership.getOrganisationId());
             displayMemb.organisationName(org.get().getName());
@@ -37,5 +37,14 @@ public class DisplayService {
         }
         display.organisations(displayMemberships);
         return display.build();
+    }
+
+    public DisplayMembership membershipToDisplay(Membership membership) {
+        return DisplayMembership.builder()
+                .userName(userService.findUserById(membership.getUserId()).get().getUsername())
+                .organisationName(organisationService.findOrganisationById(membership.getOrganisationId()).get().getName())
+                .is_member(membership.is_member)
+                .is_admin(membership.is_admin)
+                .id(membership.getId()).build();
     }
 }

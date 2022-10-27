@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.RowSet;
 import java.util.*;
 
 @Service
@@ -61,5 +62,17 @@ public class UserService {
 
     public Optional<CampUser> findUserByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public Optional<Membership> findUserMembership(CampUser user, Organisation organisation) {
+        return membershipRepository.findByUserIdEqualsAndOrganisationIdEquals(user.getId(), organisation.getId());
+    }
+
+    public Optional<CampUser> findUserById(Long userId) {
+        return userRepository.findById(userId);
+    }
+
+    public List<Membership> findOrganisationMemberships(Organisation org) {
+        return membershipRepository.findByOrganisationIdEquals(org.getId());
     }
 }
