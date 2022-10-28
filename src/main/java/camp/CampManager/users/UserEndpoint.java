@@ -39,9 +39,9 @@ public class UserEndpoint {
         return ResponseEntity.ok(usersList);
     }
 
-    @PostMapping(path = "/role/")
+    @PutMapping(path = "/role/")
     @ResponseBody
-    public ResponseEntity<String> createMembershipToUser(@RequestParam("username") String username,
+    public ResponseEntity<String> updateMembershipToUser(@RequestParam("username") String username,
                                                          @RequestParam("orgname") String orgname,
                                                          @RequestParam("is_admin") boolean is_admin,
                                                          @RequestParam("is_member") boolean is_member) throws URISyntaxException {
@@ -52,10 +52,36 @@ public class UserEndpoint {
         }
         var user = user_o.get();
         var organisation = organisation_o.get();
-        if (userService.addMembershipToUser(user, organisation, is_admin, is_member)) {
-            return ResponseEntity.created(new URI("/users/role/")).build();
+        var memb = userService.findUserMembership(user, organisation);
+        if (memb.isPresent()){
+            var memb_obj = memb.get();
+            memb_obj.set_admin(is_admin);
+            memb_obj.set_member(is_member);
+            userService.saveMembership(memb_obj);
+            return ResponseEntity.ok("Updated");
         } else {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping(path = "/role/")
+    @ResponseBody
+    public ResponseEntity<String> deleteMembershipOfUser(@RequestParam("username") String username,
+                                                         @RequestParam("orgname") String orgname) throws URISyntaxException {
+        var user_o = userService.findUserByUsername(username);
+        var organisation_o = organisationService.findOrganisationByName(orgname);
+        if (user_o.isEmpty() || organisation_o.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var user = user_o.get();
+        var organisation = organisation_o.get();
+        var memb = userService.findUserMembership(user, organisation);
+        if (memb.isPresent()){
+            var memb_obj = memb.get();
+            userService.deleteMembership();
+            return ResponseEntity.ok("Deleted");
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 

@@ -75,4 +75,12 @@ public class UserService {
     public List<Membership> findOrganisationMemberships(Organisation org) {
         return membershipRepository.findByOrganisationIdEquals(org.getId());
     }
+
+    public void saveMembership(Membership membership) {
+        membershipRepository.save(membership);
+    }
+
+    public void deleteMembership(Membership membership) {
+        membershipRepository.delete(membership);
+    }
 }
