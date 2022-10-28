@@ -73,4 +73,16 @@ public class UserEndpoint {
         var membership = userService.findUserMembership(user, organisation);
         return membership.map(value -> ResponseEntity.ok(displayService.membershipToDisplay(value))).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @PostMapping(path = "/")
+    @ResponseBody
+    public ResponseEntity<String> createUser(@RequestBody CampUser user) throws URISyntaxException {
+        var user_o = userService.findUserByUsername(user.getUsername());
+        if (user_o.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        } else {
+            userService.saveUser(user);
+            return ResponseEntity.created(new URI("/users/")).build();
+        }
+    }
 }
