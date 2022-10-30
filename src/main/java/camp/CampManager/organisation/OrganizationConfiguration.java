@@ -15,8 +15,8 @@ public class OrganizationConfiguration {
         return  args -> {
             organisationRepository.saveAll(
                     List.of(
-                            new Organisation("Org1", "Admin"),
-                            new Organisation("Org2", "Admin"),
+                            new Organisation("Org1", "Admin", "D1"),
+                            new Organisation("Org2", "Admin", "D2"),
                             new Organisation("Org3", "Admin"),
                             new Organisation("Org4", "Admin"),
                             new Organisation("Org5", "Admin"),

@@ -26,14 +26,24 @@ public class Organisation {
     private String name = null;
 
     @Column
-    private String admin = null;
+    private String manager = null;
+
+    @Column
+    private String description = null;
 
     public Organisation(String name) {
         this.name = name;
     }
 
-    public Organisation(String name, String admin) {
+    public Organisation(String name, String manager) {
         this.name = name;
-        this.admin = admin;
+        this.manager = manager;
     }
+
+    public Organisation(String name, String manager, String description) {
+        this.name = name;
+        this.manager = manager;
+        this.description = description;
+    }
+
 }
