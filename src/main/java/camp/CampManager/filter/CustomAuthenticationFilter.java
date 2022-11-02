@@ -59,8 +59,9 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         User user = (User) authentication.getPrincipal();
-        var secret = properties.getConfigValue("auth.secret");
-        assert secret != null;
+        //var secret = properties.getConfigValue("auth.secret");
+        //assert secret != null;
+        var secret = "secrét";
         Algorithm algorithm = Algorithm.HMAC256(secret.getBytes());
         String accessToken = JWT.create()
                 .withSubject(user.getUsername())
