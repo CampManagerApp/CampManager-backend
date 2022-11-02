@@ -1,11 +1,18 @@
 package camp.CampManager.users;
 
+import camp.CampManager.organisation.Organisation;
 import camp.CampManager.organisation.OrganisationRepository;
+import camp.CampManager.organisation.OrganisationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.RowSet;
 import java.util.*;
 
 @Service
@@ -32,21 +39,48 @@ public class UserService {
         return users;
     }
 
-    public void addMembershipToUser(Long user_id, Long org_id, String role) {
-        var usr = userRepository.findById(user_id);
-        var orgo = organisationRepository.findById(org_id);
-        if(usr.isPresent() && orgo.isPresent()){
-            // TODO: Mirar de no duplicar la "clau primaria" de membership
-            var user = usr.get();
-            var org = orgo.get();
-            var key = new MembershipKey(user_id, org_id);
-            var membership = Membership.builder()
-                    .userId(user_id)
-                    .organisationId(org_id)
-                    .is_member(true)
-                    .is_admin(false)
-                    .build();
-            membershipRepository.save(membership);
+    public boolean addMembershipToUser(CampUser user, Organisation organisation, boolean is_admin, boolean is_member) {
+        //Check if jpk exists, if it does return error
+        var current_memb = membershipRepository.findByUserIdEqualsAndOrganisationIdEquals(user.getId(), organisation.getId());
+        if (current_memb.isPresent()){
+            return false;
         }
+        //Create if ok
+        var membership = Membership.builder()
+            .userId(user.getId())
+            .organisationId(organisation.getId())
+            .is_admin(is_admin)
+            .is_member(is_member)
+            .build();
+        membershipRepository.save(membership);
+        return true;
+    }
+
+    public List<Membership> findUserMemberships(CampUser user) {
+        return membershipRepository.findByUserIdEquals(user.getId());
+    }
+
+    public Optional<CampUser> findUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public Optional<Membership> findUserMembership(CampUser user, Organisation organisation) {
+        return membershipRepository.findByUserIdEqualsAndOrganisationIdEquals(user.getId(), organisation.getId());
+    }
+
+    public Optional<CampUser> findUserById(Long userId) {
+        return userRepository.findById(userId);
+    }
+
+    public List<Membership> findOrganisationMemberships(Organisation org) {
+        return membershipRepository.findByOrganisationIdEquals(org.getId());
+    }
+
+    public void saveMembership(Membership membership) {
+        membershipRepository.save(membership);
+    }
+
+    public void deleteMembership(Membership membership) {
+        membershipRepository.delete(membership);
     }
 }

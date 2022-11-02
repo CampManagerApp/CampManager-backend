@@ -4,6 +4,7 @@ import camp.CampManager.filter.CustomAuthenticationFilter;
 import camp.CampManager.filter.CustomAuthorizationFilter;
 import camp.CampManager.users.CampUser;
 import camp.CampManager.users.UserRepository;
+import camp.CampManager.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -61,6 +62,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/login/**").permitAll()
+                .antMatchers("/users/**").permitAll()
                 .antMatchers("/organisation/**").hasAuthority("ADMIN")
                 .and()
                 .authorizeRequests()

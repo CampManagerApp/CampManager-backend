@@ -22,13 +22,13 @@ public class UsersDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<CampUser> user_o = userRepository.findByUsername(username);
         if (user_o.isPresent()) {
-            CampUser campUser = user_o.get();
+            CampUser user = user_o.get();
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>(
-                    Collections.singleton(new SimpleGrantedAuthority(campUser.getRole())));
+                    Collections.singleton(new SimpleGrantedAuthority(user.getRole())));
             return org.springframework.security.core.userdetails.User
                     .builder()
-                    .username(campUser.getUsername())
-                    .password(campUser.getPassword())
+                    .username(user.getUsername())
+                    .password(user.getPassword())
                     .authorities(authorities)
                     .build();
         }
