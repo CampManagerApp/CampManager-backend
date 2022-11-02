@@ -78,7 +78,7 @@ public class UserEndpoint {
         var memb = userService.findUserMembership(user, organisation);
         if (memb.isPresent()){
             var memb_obj = memb.get();
-            userService.deleteMembership();
+            userService.deleteMembership(memb_obj);
             return ResponseEntity.ok("Deleted");
         } else {
             return ResponseEntity.notFound().build();
