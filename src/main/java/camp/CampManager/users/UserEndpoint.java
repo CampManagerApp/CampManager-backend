@@ -39,7 +39,7 @@ public class UserEndpoint {
         return ResponseEntity.ok(usersList);
     }
 
-    @PutMapping(path = "/role/")
+    @PutMapping(path = "/organisation_role/")
     @ResponseBody
     public ResponseEntity<String> updateMembershipToUser(@RequestParam("username") String username,
                                                          @RequestParam("orgname") String orgname,
@@ -64,7 +64,7 @@ public class UserEndpoint {
         }
     }
 
-    @DeleteMapping(path = "/role/")
+    @DeleteMapping(path = "/organisation_role/")
     @ResponseBody
     public ResponseEntity<String> deleteMembershipOfUser(@RequestParam("username") String username,
                                                          @RequestParam("orgname") String orgname) throws URISyntaxException {
@@ -85,7 +85,7 @@ public class UserEndpoint {
         }
     }
 
-    @GetMapping(path = "/role/")
+    @GetMapping(path = "/organisation_role/")
     @ResponseBody
     public ResponseEntity<DisplayMembership> getRolesOfUserInOrg(@RequestParam("username") String username,
                                                                  @RequestParam("orgname") String orgname) {
