@@ -63,6 +63,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/api/login/**").permitAll()
                 .antMatchers("/users/**").permitAll()
+                .antMatchers("/names/**").permitAll()
                 .antMatchers("/organisation/**").hasAuthority("ADMIN")
                 .and()
                 .authorizeRequests()

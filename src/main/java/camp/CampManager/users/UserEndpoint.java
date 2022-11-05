@@ -50,6 +50,21 @@ public class UserEndpoint {
         return ResponseEntity.ok(usersList);
     }
 
+    @GetMapping(path = "/role/")
+    @ResponseBody
+    public ResponseEntity<DisplayMembership> getRolesOfUserInOrg(@RequestParam("username") String username,
+                                                                 @RequestParam("orgname") String orgname) {
+        var user_o = userService.findUserByUsername(username);
+        var organisation_o = organisationService.findOrganisationByName(orgname);
+        if (user_o.isEmpty() || organisation_o.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var user = user_o.get();
+        var organisation = organisation_o.get();
+        var membership = userService.findUserMembership(user, organisation);
+        return membership.map(value -> ResponseEntity.ok(displayService.membershipToDisplay(value))).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @PutMapping(path = "/role/")
     @ResponseBody
     public ResponseEntity<String> updateMembershipToUser(@RequestParam("username") String username,
@@ -116,21 +131,6 @@ public class UserEndpoint {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    @GetMapping(path = "/role/")
-    @ResponseBody
-    public ResponseEntity<DisplayMembership> getRolesOfUserInOrg(@RequestParam("username") String username,
-                                                                 @RequestParam("orgname") String orgname) {
-        var user_o = userService.findUserByUsername(username);
-        var organisation_o = organisationService.findOrganisationByName(orgname);
-        if (user_o.isEmpty() || organisation_o.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        var user = user_o.get();
-        var organisation = organisation_o.get();
-        var membership = userService.findUserMembership(user, organisation);
-        return membership.map(value -> ResponseEntity.ok(displayService.membershipToDisplay(value))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping(path = "/")

@@ -48,6 +48,15 @@ public class DisplayService {
                 .id(membership.getId()).build();
     }
 
+    public DisplayMembership nameMembershipToDisplay(Membership membership) {
+        return DisplayMembership.builder()
+                .userName(membership.getFullname())
+                .organisationName(organisationService.findOrganisationById(membership.getOrganisationId()).get().getName())
+                .is_member(membership.is_member)
+                .is_admin(membership.is_admin)
+                .id(membership.getId()).build();
+    }
+
     public DisplayUser nameMembershipToDisplayUser(Membership membership){
         return DisplayUser.builder()
                 .full_name(membership.getFullname())
