@@ -2,17 +2,11 @@ package camp.CampManager.users;
 
 import camp.CampManager.organisation.Organisation;
 import camp.CampManager.organisation.OrganisationRepository;
-import camp.CampManager.organisation.OrganisationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.RowSet;
 import java.util.*;
 
 @Service
@@ -39,11 +33,11 @@ public class UserService {
         return users;
     }
 
-    public boolean addMembershipToUser(CampUser user, Organisation organisation, boolean is_admin, boolean is_member) {
+    public void addMembershipToUser(CampUser user, Organisation organisation, boolean is_admin, boolean is_member) {
         //Check if jpk exists, if it does return error
         var current_memb = membershipRepository.findByUserIdEqualsAndOrganisationIdEquals(user.getId(), organisation.getId());
         if (current_memb.isPresent()){
-            return false;
+            return;
         }
         //Create if ok
         var membership = Membership.builder()
@@ -53,7 +47,6 @@ public class UserService {
             .is_member(is_member)
             .build();
         membershipRepository.save(membership);
-        return true;
     }
 
     public List<Membership> findUserMemberships(CampUser user) {

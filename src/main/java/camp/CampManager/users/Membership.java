@@ -2,6 +2,7 @@ package camp.CampManager.users;
 
 import camp.CampManager.organisation.Organisation;
 import lombok.*;
+import org.springframework.data.util.Pair;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -21,7 +22,9 @@ public class Membership {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    Long userId;
+    Long userId = (long) -1;
+    String fullname;
+
     Long organisationId;
 
     // "MEMBER", "ADMIN", or both

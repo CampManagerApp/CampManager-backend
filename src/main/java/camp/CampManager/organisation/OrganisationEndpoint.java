@@ -77,11 +77,57 @@ public class OrganisationEndpoint {
             var memberships = userService.findOrganisationMemberships(org);
             var user_list = new LinkedList<DisplayUser>();
             for (Membership membership : memberships) {
-                var user = userService.findUserById(membership.getUserId());
-                if (user.isEmpty()) {
-                    return ResponseEntity.internalServerError().build();
+                if (membership.getUserId() != -1) {
+                    var user = userService.findUserById(membership.getUserId());
+                    if (user.isEmpty()) {
+                        return ResponseEntity.internalServerError().build();
+                    }
+                    user_list.add(displayService.userToDisplay(user.get()));
+                } else {
+                    user_list.add(displayService.nameMembershipToDisplayUser(membership));
                 }
-                user_list.add(displayService.userToDisplay(user.get()));
+            }
+            return ResponseEntity.ok(user_list);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(path = "/{id}/users")
+    @ResponseBody
+    public ResponseEntity<List<DisplayUser>> findUsersOfOrganisation(@PathVariable("id") Long orgId) {
+        var organisation_o = organisationService.getOrganisationById(orgId);
+        if (organisation_o.isPresent()) {
+            var org = organisation_o.get();
+            var memberships = userService.findOrganisationMemberships(org);
+            var user_list = new LinkedList<DisplayUser>();
+            for (Membership membership : memberships) {
+                if (membership.getUserId() != -1) {
+                    var user = userService.findUserById(membership.getUserId());
+                    if (user.isEmpty()) {
+                        return ResponseEntity.internalServerError().build();
+                    }
+                    user_list.add(displayService.userToDisplay(user.get()));
+                }
+            }
+            return ResponseEntity.ok(user_list);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(path = "/{id}/names")
+    @ResponseBody
+    public ResponseEntity<List<DisplayUser>> findNamesOfOrganisation(@PathVariable("id") Long orgId) {
+        var organisation_o = organisationService.getOrganisationById(orgId);
+        if (organisation_o.isPresent()) {
+            var org = organisation_o.get();
+            var memberships = userService.findOrganisationMemberships(org);
+            var user_list = new LinkedList<DisplayUser>();
+            for (Membership membership : memberships) {
+                if (membership.getUserId() == -1) {
+                    user_list.add(displayService.nameMembershipToDisplayUser(membership));
+                }
             }
             return ResponseEntity.ok(user_list);
         } else {

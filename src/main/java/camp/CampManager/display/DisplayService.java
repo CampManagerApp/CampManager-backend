@@ -47,4 +47,10 @@ public class DisplayService {
                 .is_admin(membership.is_admin)
                 .id(membership.getId()).build();
     }
+
+    public DisplayUser nameMembershipToDisplayUser(Membership membership){
+        return DisplayUser.builder()
+                .full_name(membership.getFullname())
+                .build();
+    }
 }
