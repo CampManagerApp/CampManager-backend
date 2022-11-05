@@ -77,7 +77,7 @@ public class OrganisationEndpoint {
             var memberships = userService.findOrganisationMemberships(org);
             var user_list = new LinkedList<DisplayUser>();
             for (Membership membership : memberships) {
-                if (membership.getUserId() != -1) {
+                if (membership.is_claimed()) {
                     var user = userService.findUserById(membership.getUserId());
                     if (user.isEmpty()) {
                         return ResponseEntity.internalServerError().build();
@@ -102,7 +102,7 @@ public class OrganisationEndpoint {
             var memberships = userService.findOrganisationMemberships(org);
             var user_list = new LinkedList<DisplayUser>();
             for (Membership membership : memberships) {
-                if (membership.getUserId() != -1) {
+                if (membership.is_claimed()) {
                     var user = userService.findUserById(membership.getUserId());
                     if (user.isEmpty()) {
                         return ResponseEntity.internalServerError().build();
@@ -122,10 +122,13 @@ public class OrganisationEndpoint {
         var organisation_o = organisationService.getOrganisationById(orgId);
         if (organisation_o.isPresent()) {
             var org = organisation_o.get();
+            System.out.println("BEFORE FIND MEMBERSHIPS");
             var memberships = userService.findOrganisationMemberships(org);
             var user_list = new LinkedList<DisplayUser>();
+            System.out.println("BEFORE LOOP");
             for (Membership membership : memberships) {
-                if (membership.getUserId() == -1) {
+                System.out.println("Memb: " + membership.getUserId() + membership.getOrganisationId() + membership.getFullname());
+                if (!membership.is_claimed()) {
                     user_list.add(displayService.nameMembershipToDisplayUser(membership));
                 }
             }

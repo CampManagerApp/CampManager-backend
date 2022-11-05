@@ -31,6 +31,7 @@ public class NameService {
                 .organisationId(organisation.getId())
                 .is_admin(is_admin)
                 .is_member(is_member)
+                .is_claimed(false)
                 .build());
     }
 }

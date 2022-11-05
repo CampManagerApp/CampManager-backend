@@ -22,7 +22,9 @@ public class Membership {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    Long userId = (long) -1;
+    boolean is_claimed = false;
+
+    Long userId;
     String fullname;
 
     Long organisationId;

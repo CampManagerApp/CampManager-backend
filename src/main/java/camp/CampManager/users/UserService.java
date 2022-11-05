@@ -27,7 +27,7 @@ public class UserService {
         userRepository.save(campUser);
     }
 
-    public List<CampUser> getUsers(){
+    public List<CampUser> getUsers() {
         var users = new LinkedList<CampUser>();
         userRepository.findAll().forEach(users::add);
         return users;
@@ -36,16 +36,17 @@ public class UserService {
     public void addMembershipToUser(CampUser user, Organisation organisation, boolean is_admin, boolean is_member) {
         //Check if jpk exists, if it does return error
         var current_memb = membershipRepository.findByUserIdEqualsAndOrganisationIdEquals(user.getId(), organisation.getId());
-        if (current_memb.isPresent()){
+        if (current_memb.isPresent()) {
             return;
         }
         //Create if ok
         var membership = Membership.builder()
-            .userId(user.getId())
-            .organisationId(organisation.getId())
-            .is_admin(is_admin)
-            .is_member(is_member)
-            .build();
+                .userId(user.getId())
+                .organisationId(organisation.getId())
+                .is_admin(is_admin)
+                .is_member(is_member)
+                .is_claimed(true)
+                .build();
         membershipRepository.save(membership);
     }
 
