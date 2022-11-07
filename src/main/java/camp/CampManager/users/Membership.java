@@ -1,11 +1,8 @@
 package camp.CampManager.users;
 
-import camp.CampManager.organisation.Organisation;
 import lombok.*;
-import org.springframework.data.util.Pair;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @Getter

@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MembershipRepository extends CrudRepository<Membership, Long> {
-    public List<Membership> findByUserIdEquals(Long userId);
+    List<Membership> findByUserIdEquals(Long userId);
 
-    public Optional<Membership> findByUserIdEqualsAndOrganisationIdEquals(Long userId, Long organisationId);
+    Optional<Membership> findByUserIdEqualsAndOrganisationIdEquals(Long userId, Long organisationId);
 
-    public List<Membership> findByOrganisationIdEquals(Long organisationId);
+    List<Membership> findByOrganisationIdEquals(Long organisationId);
 
-    public List<Membership> findByFullnameEquals(String fullname);
+    List<Membership> findByFullnameEquals(String fullname);
 
-    public Optional<Membership> findByFullnameEqualsAndOrganisationIdEquals(String fullname, Long organisationId);
+    Optional<Membership> findByFullnameEqualsAndOrganisationIdEquals(String fullname, Long organisationId);
 }

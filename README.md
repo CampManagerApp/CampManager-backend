@@ -40,5 +40,5 @@ docker-compose up
     > **Password**: **admin**
     
  
-<br/> Congratulation you have deploy successfully the back-end of our project and you can start to work on it :smiley:
+<br/> Congratulation you have deployed successfully the back-end of our project, and you can start to work on it :smiley:
  

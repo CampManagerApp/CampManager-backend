@@ -4,8 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-
 @Getter
 @Setter
 @Builder
@@ -16,6 +14,6 @@ public class DisplayMembership {
     private Long id;
 
     // "MEMBER", "ADMIN", or both
-    public boolean is_member = false;
-    public boolean is_admin = false;
+    public boolean is_member;
+    public boolean is_admin;
 }

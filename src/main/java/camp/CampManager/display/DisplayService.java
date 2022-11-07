@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 @Service
 public class DisplayService {
     @Autowired

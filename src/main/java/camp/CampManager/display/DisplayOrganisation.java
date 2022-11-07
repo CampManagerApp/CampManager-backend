@@ -4,9 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import java.util.List;
-import java.util.Set;
 
 @Builder
 @Getter
@@ -14,8 +12,8 @@ import java.util.Set;
 public class DisplayOrganisation {
     private Long id;
 
-    private String name = null;
-    private String admin = null;
+    private String name;
+    private String admin;
 
     private List<DisplayMembershipOrg> members;
 }

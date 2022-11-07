@@ -3,7 +3,6 @@ package camp.CampManager.users;
 import camp.CampManager.display.DisplayMembership;
 import camp.CampManager.display.DisplayService;
 import camp.CampManager.display.DisplayUser;
-import camp.CampManager.organisation.Organisation;
 import camp.CampManager.organisation.OrganisationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,11 +31,7 @@ public class UserEndpoint {
     public ResponseEntity<DisplayUser> findUser(@RequestBody Map<String, String> input) {
         String username = input.get("username");
         var user_o = userService.findUserByUsername(username);
-        if (user_o.isPresent()){
-            return ResponseEntity.ok(displayService.userToDisplay(user_o.get()));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return user_o.map(user -> ResponseEntity.ok(displayService.userToDisplay(user))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping(path = "/all/")
@@ -45,9 +40,7 @@ public class UserEndpoint {
         var users = userService.getUsers();
         var usersList = new LinkedList<DisplayUser>();
         users.forEach(
-                user -> {
-                    usersList.add(displayService.userToDisplay(user));
-                }
+                user -> usersList.add(displayService.userToDisplay(user))
         );
         return ResponseEntity.ok(usersList);
     }
@@ -70,7 +63,7 @@ public class UserEndpoint {
 
     @PutMapping(path = "/role/")
     @ResponseBody
-    public ResponseEntity<String> updateMembershipToUser(@RequestBody Map<String, String> input) throws URISyntaxException {
+    public ResponseEntity<String> updateMembershipToUser(@RequestBody Map<String, String> input) {
         var username = input.get("username");
         var orgname = input.get("orgname");
         var is_admin = Boolean.parseBoolean(input.get("is_admin"));
@@ -119,7 +112,7 @@ public class UserEndpoint {
 
     @DeleteMapping(path = "/role/")
     @ResponseBody
-    public ResponseEntity<String> deleteMembershipOfUser(@RequestBody Map<String, String> input) throws URISyntaxException {
+    public ResponseEntity<String> deleteMembershipOfUser(@RequestBody Map<String, String> input) {
         var username = input.get("username");
         var orgname = input.get("orgname");
         var user_o = userService.findUserByUsername(username);
@@ -159,7 +152,7 @@ public class UserEndpoint {
         if (user_o.isPresent()) {
             var membs = userService.findUserMemberships(user_o.get());
             var displayMembs = new LinkedList<DisplayMembership>();
-            membs.forEach(e->displayMembs.add(displayService.membershipToDisplay(e)));
+            membs.forEach(e -> displayMembs.add(displayService.membershipToDisplay(e)));
             return ResponseEntity.ok(displayMembs);
         } else {
             return ResponseEntity.notFound().build();
