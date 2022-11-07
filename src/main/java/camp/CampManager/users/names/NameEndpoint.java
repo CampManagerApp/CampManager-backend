@@ -26,20 +26,20 @@ public class NameEndpoint {
 
     @GetMapping(path = "/role/")
     @ResponseBody
-    public ResponseEntity<DisplayMembership> getRolesOfNameInOrg(@RequestParam("username") String username,
+    public ResponseEntity<DisplayMembership> getRolesOfNameInOrg(@RequestParam("fullname") String fullname,
                                                                  @RequestParam("orgname") String orgname) {
         var organisation_o = organisationService.findOrganisationByName(orgname);
         if (organisation_o.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         var organisation = organisation_o.get();
-        var membership = nameService.findNameMembership(username, organisation);
+        var membership = nameService.findNameMembership(fullname, organisation);
         return membership.map(value -> ResponseEntity.ok(displayService.nameMembershipToDisplay(value))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping(path = "/role/")
     @ResponseBody
-    public ResponseEntity<String> updateMembershipToName(@RequestParam("username") String username,
+    public ResponseEntity<String> updateMembershipToName(@RequestParam("fullname") String fullname,
                                                          @RequestParam("orgname") String orgname,
                                                          @RequestParam("is_admin") boolean is_admin,
                                                          @RequestParam("is_member") boolean is_member) throws URISyntaxException {
@@ -48,7 +48,7 @@ public class NameEndpoint {
             return ResponseEntity.notFound().build();
         }
         var organisation = organisation_o.get();
-        var memb = nameService.findNameMembership(username, organisation);
+        var memb = nameService.findNameMembership(fullname, organisation);
         if (memb.isPresent()) {
             var memb_obj = memb.get();
             memb_obj.set_admin(is_admin);
@@ -62,7 +62,7 @@ public class NameEndpoint {
 
     @PostMapping(path = "/role/")
     @ResponseBody
-    public ResponseEntity<String> createMembershipOfName(@RequestParam("username") String username,
+    public ResponseEntity<String> createMembershipOfName(@RequestParam("fullname") String fullname,
                                                          @RequestParam("orgname") String orgname,
                                                          @RequestParam("is_admin") boolean is_admin,
                                                          @RequestParam("is_member") boolean is_member) throws URISyntaxException {
@@ -71,25 +71,25 @@ public class NameEndpoint {
             return ResponseEntity.notFound().build();
         }
         var organisation = organisation_o.get();
-        var memb = nameService.findNameMembership(username, organisation);
+        var memb = nameService.findNameMembership(fullname, organisation);
         if (memb.isPresent()) {
             return ResponseEntity.badRequest().build();
         } else {
-            nameService.addMembershipToName(username, organisation, is_admin, is_member);
+            nameService.addMembershipToName(fullname, organisation, is_admin, is_member);
             return ResponseEntity.created(new URI("/users/role")).build();
         }
     }
 
     @DeleteMapping(path = "/role/")
     @ResponseBody
-    public ResponseEntity<String> deleteMembershipOfName(@RequestParam("username") String username,
+    public ResponseEntity<String> deleteMembershipOfName(@RequestParam("fullname") String fullname,
                                                          @RequestParam("orgname") String orgname) throws URISyntaxException {
         var organisation_o = organisationService.findOrganisationByName(orgname);
         if (organisation_o.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         var organisation = organisation_o.get();
-        var memb = nameService.findNameMembership(username, organisation);
+        var memb = nameService.findNameMembership(fullname, organisation);
         if (memb.isPresent()) {
             var memb_obj = memb.get();
             userService.deleteMembership(memb_obj);
