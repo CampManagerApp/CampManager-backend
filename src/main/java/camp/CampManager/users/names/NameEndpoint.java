@@ -98,4 +98,28 @@ public class NameEndpoint {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping(path = "/role/claim")
+    @ResponseBody
+    public ResponseEntity<String> claimMembershipOfName(@RequestParam("username") String username,
+                                                         @RequestParam("orgname") String orgname,
+                                                         @RequestParam("fullname") String fullname) throws URISyntaxException {
+        var organisation_o = organisationService.findOrganisationByName(orgname);
+        var user_o = userService.findUserByUsername(username);
+        if (user_o.isEmpty() || organisation_o.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var organisation = organisation_o.get();
+        var user = user_o.get();
+        var memb = nameService.findNameMembership(fullname, organisation);
+        if (memb.isPresent()) {
+            var m = memb.get();
+            m.setUserId(user.getId());
+            m.set_claimed(true);
+            userService.saveMembership(m);
+            return ResponseEntity.ok("Claimed");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
