@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -26,8 +27,9 @@ public class NameEndpoint {
 
     @GetMapping(path = "/role/")
     @ResponseBody
-    public ResponseEntity<DisplayMembership> getRolesOfNameInOrg(@RequestParam("fullname") String fullname,
-                                                                 @RequestParam("orgname") String orgname) {
+    public ResponseEntity<DisplayMembership> getRolesOfNameInOrg(@RequestBody Map<String, String> input) {
+        var fullname = input.get("fullname");
+        var orgname = input.get("orgname");
         var organisation_o = organisationService.findOrganisationByName(orgname);
         if (organisation_o.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -39,10 +41,11 @@ public class NameEndpoint {
 
     @PutMapping(path = "/role/")
     @ResponseBody
-    public ResponseEntity<String> updateMembershipToName(@RequestParam("fullname") String fullname,
-                                                         @RequestParam("orgname") String orgname,
-                                                         @RequestParam("is_admin") boolean is_admin,
-                                                         @RequestParam("is_member") boolean is_member) throws URISyntaxException {
+    public ResponseEntity<String> updateMembershipToName(@RequestBody Map<String, String> input) {
+        var fullname = input.get("fullname");
+        var orgname = input.get("orgname");
+        var is_admin = Boolean.parseBoolean(input.get("is_admin"));
+        var is_member = Boolean.parseBoolean(input.get("is_member"));
         var organisation_o = organisationService.findOrganisationByName(orgname);
         if (organisation_o.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -62,10 +65,11 @@ public class NameEndpoint {
 
     @PostMapping(path = "/role/")
     @ResponseBody
-    public ResponseEntity<String> createMembershipOfName(@RequestParam("fullname") String fullname,
-                                                         @RequestParam("orgname") String orgname,
-                                                         @RequestParam("is_admin") boolean is_admin,
-                                                         @RequestParam("is_member") boolean is_member) throws URISyntaxException {
+    public ResponseEntity<String> createMembershipOfName(@RequestBody Map<String, String> input) throws URISyntaxException {
+        var fullname = input.get("fullname");
+        var orgname = input.get("orgname");
+        var is_admin = Boolean.parseBoolean(input.get("is_admin"));
+        var is_member = Boolean.parseBoolean(input.get("is_member"));
         var organisation_o = organisationService.findOrganisationByName(orgname);
         if (organisation_o.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -82,8 +86,9 @@ public class NameEndpoint {
 
     @DeleteMapping(path = "/role/")
     @ResponseBody
-    public ResponseEntity<String> deleteMembershipOfName(@RequestParam("fullname") String fullname,
-                                                         @RequestParam("orgname") String orgname) throws URISyntaxException {
+    public ResponseEntity<String> deleteMembershipOfName(@RequestBody Map<String, String> input) {
+        var fullname = input.get("fullname");
+        var orgname = input.get("orgname");
         var organisation_o = organisationService.findOrganisationByName(orgname);
         if (organisation_o.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -101,9 +106,10 @@ public class NameEndpoint {
 
     @PostMapping(path = "/role/claim")
     @ResponseBody
-    public ResponseEntity<String> claimMembershipOfName(@RequestParam("username") String username,
-                                                         @RequestParam("orgname") String orgname,
-                                                         @RequestParam("fullname") String fullname) throws URISyntaxException {
+    public ResponseEntity<String> claimMembershipOfName(@RequestBody Map<String, String> input) {
+        var fullname = input.get("fullname");
+        var orgname = input.get("orgname");
+        var username = input.get("username");
         var organisation_o = organisationService.findOrganisationByName(orgname);
         var user_o = userService.findUserByUsername(username);
         if (user_o.isEmpty() || organisation_o.isEmpty()) {
