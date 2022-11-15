@@ -26,6 +26,9 @@ public class Organisation {
     @Column
     private String description = null;
 
+    @Column
+    private String organisationCode = null;
+
     public Organisation(String name) {
         this.name = name;
     }

@@ -38,6 +38,18 @@ public class OrganisationEndpoint {
         return opt.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping(path = "/{id}/code")
+    @ResponseBody
+    public ResponseEntity<String> getOrganisationCode(@PathVariable("id") Long id) {
+        Optional<Organisation> opt = organisationService.getOrganisationById(id);
+        // This is just an if opt.isPresent return ok else return not found
+        if (opt.isPresent()){
+            return ResponseEntity.ok(opt.get().getOrganisationCode());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @DeleteMapping(path = "/{id}")
     @ResponseBody
     public ResponseEntity<Organisation> deleteOrganisation(@PathVariable("id") Long id) {
