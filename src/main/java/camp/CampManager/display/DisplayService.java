@@ -1,6 +1,7 @@
 package camp.CampManager.display;
 
 import camp.CampManager.organisation.OrganisationService;
+import camp.CampManager.organisation.campaign.Campaign;
 import camp.CampManager.users.CampUser;
 import camp.CampManager.users.Membership;
 import camp.CampManager.users.UserService;
@@ -61,6 +62,16 @@ public class DisplayService {
     public DisplayUser nameMembershipToDisplayUser(Membership membership){
         return DisplayUser.builder()
                 .full_name(membership.getFullname())
+                .build();
+    }
+
+    public DisplayCampaign campaignToDisplay(Campaign campaign) {
+        return DisplayCampaign.builder()
+                .id(campaign.getId())
+                .organisationId(campaign.getOrganisationId())
+                .campaignName(campaign.getCampaignName())
+                .startDate(campaign.getStartDate())
+                .endDate(campaign.getEndDate())
                 .build();
     }
 }

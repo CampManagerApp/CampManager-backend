@@ -1,6 +1,7 @@
 package camp.CampManager.organisation.campaign;
 
 import camp.CampManager.organisation.Organisation;
+import camp.CampManager.organisation.campaign.participants.Participant;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Campaign {
@@ -18,14 +20,15 @@ public class Campaign {
     @Column(name = "campaign_id", nullable = false)
     private Long id;
 
-    private Long organisation_id;
+    private Long organisationId;
 
-    private String campaign_name;
-    private Date start_date;
-    private Date end_date;
+    private String campaignName;
+    private Date startDate;
+    private Date endDate;
 
+    @Convert(converter = StringListConverter.class)
+    private List<Long> participant_ids;
     /*
-    private List<Participant> participants;
     private List<Counsellor> counsellors;
      */
 }
