@@ -2,12 +2,14 @@ package camp.CampManager.organisation;
 
 import camp.CampManager.display.DisplayService;
 import camp.CampManager.display.DisplayUser;
+import camp.CampManager.security.HashCreator;
 import camp.CampManager.users.Membership;
 import camp.CampManager.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +25,8 @@ public class OrganisationEndpoint {
     private UserService userService;
     @Autowired
     private DisplayService displayService;
+    @Autowired
+    private HashCreator hashCreator;
 
     @GetMapping(path = "/")
     @ResponseBody
@@ -43,11 +47,29 @@ public class OrganisationEndpoint {
     public ResponseEntity<String> getOrganisationCode(@PathVariable("id") Long id) {
         Optional<Organisation> opt = organisationService.getOrganisationById(id);
         // This is just an if opt.isPresent return ok else return not found
-        if (opt.isPresent()){
-            return ResponseEntity.ok(opt.get().getOrganisationCode());
+        if (opt.isPresent()) {
+            try {
+                return ResponseEntity.ok(hashCreator.createMD5Hash(opt.get().getId().toString()));
+            } catch (NoSuchAlgorithmException ignored) {
+            }
         } else {
             return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(path = "/code")
+    @ResponseBody
+    public ResponseEntity<Organisation> getOrganisationByCode(@RequestParam("code") String code) {
+        for (Organisation org : organisationService.getAllOrganisations()) {
+            try {
+                if (code.equals(hashCreator.createMD5Hash(org.getId().toString()))){
+                    return ResponseEntity.ok(org);
+                }
+            } catch (NoSuchAlgorithmException ignored) {
+            }
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping(path = "/{id}")

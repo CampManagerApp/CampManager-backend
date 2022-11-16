@@ -26,10 +26,6 @@ public class OrganisationService {
         return organisationRepository.findById(id);
     }
 
-    public Optional<Organisation> getOrganisationByCode(String code) {
-        return organisationRepository.findByCode(code);
-    }
-
     public Optional<Organisation> getOrganisationByName(String name) {
         return organisationRepository.findByName(name);
     }
@@ -40,11 +36,6 @@ public class OrganisationService {
 
     public void createOrganisation(Organisation organisation) {
         organisationRepository.save(organisation);
-        try {
-            organisation.setOrganisationCode(hashCreator.createMD5Hash(organisation.getId().toString()));
-        } catch (NoSuchAlgorithmException ignored) {
-
-        }
     }
 
     public boolean updateOrganisation(Long id, Organisation organisation) {
@@ -62,10 +53,6 @@ public class OrganisationService {
 
     public Optional<Organisation> findOrganisationByName(String orgname) {
         return organisationRepository.findByName(orgname);
-    }
-
-    public Optional<Organisation> findOrganisationByCode(String code) {
-        return organisationRepository.findByCode(code);
     }
 
     public Optional<Organisation> findOrganisationById(Long organisationId) {
