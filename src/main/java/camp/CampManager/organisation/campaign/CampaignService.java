@@ -1,5 +1,6 @@
 package camp.CampManager.organisation.campaign;
 
+import camp.CampManager.organisation.campaign.participants.Participant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,5 +48,19 @@ public class CampaignService {
 
     public List<Campaign> findCampaignsByOrganisationId(Long organisation_id) {
         return campaignRepository.findByOrganisationIdEquals(organisation_id);
+    }
+
+    public void addParticipantToCampaign(Campaign campaign, Participant participant) {
+        var ids = campaign.getParticipant_ids();
+        if (!ids.contains(participant.getId())){
+            ids.add(participant.getId());
+            campaign.setParticipant_ids(ids);
+            campaignRepository.save(campaign);
+        }
+    }
+
+    public void deleteParticipantFromCampaign(Campaign campaign, Participant participant) {
+        campaign.getParticipant_ids().remove(participant.getId());
+        campaignRepository.save(campaign);
     }
 }

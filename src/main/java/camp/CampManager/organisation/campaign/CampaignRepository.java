@@ -12,6 +12,5 @@ public interface CampaignRepository extends CrudRepository<Campaign, Long> {
 
     List<Campaign> findByOrganisationIdEquals(Long organisationId);
 
-
-
+    Optional<Campaign> findByIdEqualsAndOrganisationIdEquals(Long campId, Long orgId);
 }
