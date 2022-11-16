@@ -1,4 +1,4 @@
-package camp.CampManager.organisation.campaign.participants;
+package camp.CampManager.organisation.counsellors;
 
 import camp.CampManager.organisation.campaign.CampaignRepository;
 import camp.CampManager.organisation.campaign.CampaignService;
@@ -15,24 +15,24 @@ import java.util.Map;
 
 @Service
 @Transactional
-public class ParticipantService {
+public class CounsellorService {
     @Autowired
-    private ParticipantRepository participantRepository;
+    private CounsellorRepository counsellorRepository;
     @Autowired
     private CampaignRepository campaignRepository;
     @Autowired
     private CampaignService campaignService;
 
-    public ResponseEntity<List<Participant>> getAllParticipantsOfCampaign(Long orgId, Long campId) {
+    public ResponseEntity<List<Counsellor>> getAllCounsellorsOfCampaign(Long orgId, Long campId) {
         var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
         if (camp_o.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         var campaign = camp_o.get();
-        var participants = new LinkedList<Participant>();
-        for (Long part_id : campaign.getParticipant_ids()) {
-            if (participantRepository.findById(part_id).isPresent()) {
-                participants.add(participantRepository.findById(part_id).get());
+        var participants = new LinkedList<Counsellor>();
+        for (Long part_id : campaign.getCounsellor_ids()) {
+            if (counsellorRepository.findById(part_id).isPresent()) {
+                participants.add(counsellorRepository.findById(part_id).get());
             } else {
                 return ResponseEntity.notFound().build();
             }
@@ -40,12 +40,12 @@ public class ParticipantService {
         return ResponseEntity.ok(participants);
     }
 
-    public ResponseEntity<String> addNewParticipantToCampaign(Long orgId, Long campId, Map<String, String> input) throws URISyntaxException {
+    public ResponseEntity<String> addNewCounsellorToCampaign(Long orgId, Long campId, Map<String, String> input) throws URISyntaxException {
         var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
         if (camp_o.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        var participant_builder = Participant.builder();
+        var participant_builder = Counsellor.builder();
         if (input.containsKey("name")) {
             participant_builder.name(input.get("name"));
         } else {
@@ -54,13 +54,13 @@ public class ParticipantService {
         if (input.containsKey("parents_contact")) {
             participant_builder.parents_contact(input.get("parents_contact"));
         }
-        var participant_instance = participant_builder.build();
-        participantRepository.save(participant_instance);
-        campaignService.addParticipantToCampaign(camp_o.get(), participant_instance);
+        var counsellor = participant_builder.build();
+        counsellorRepository.save(counsellor);
+        campaignService.addCounsellorToCampaign(camp_o.get(), counsellor);
         return ResponseEntity.created(new URI("/organisation/id/campaign/id/participant")).build();
     }
 
-    public ResponseEntity<String> deleteParticipantFromCampaign(Long orgId, Long campId, Map<String, String> input) {
+    public ResponseEntity<String> deleteCounsellorFromCampaign(Long orgId, Long campId, Map<String, String> input) {
         var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
         if (camp_o.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -72,25 +72,25 @@ public class ParticipantService {
             return ResponseEntity.badRequest().body("Name of participant missing");
         }
         var campaign = camp_o.get();
-        var new_ids = campaign.getParticipant_ids();
-        Participant to_delete = null;
-        for (Long part_id : campaign.getParticipant_ids()) {
-            var p_o = participantRepository.findById(part_id);
+        var new_ids = campaign.getCounsellor_ids();
+        Counsellor to_delete = null;
+        for (Long part_id : campaign.getCounsellor_ids()) {
+            var p_o = counsellorRepository.findById(part_id);
             if (p_o.isPresent()) {
                 if (p_o.get().getName().equals(name)) {
                     to_delete = p_o.get();
                 }
             }
         }
-        if (to_delete == null){
+        if (to_delete == null) {
             return ResponseEntity.notFound().build();
         }
-        campaignService.deleteParticipantFromCampaign(campaign, to_delete);
-        participantRepository.deleteById(to_delete.getId());
+        campaignService.deleteCounsellorFromCampaign(campaign, to_delete);
+        counsellorRepository.deleteById(to_delete.getId());
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Participant> getInfoOfCampaignParticipant(Long orgId, Long campId, Map<String, String> input) {
+    public ResponseEntity<Counsellor> getInfoOfCampaignCounsellor(Long orgId, Long campId, Map<String, String> input) {
         var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
         if (camp_o.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -102,8 +102,8 @@ public class ParticipantService {
             return ResponseEntity.badRequest().build();
         }
         var campaign = camp_o.get();
-        for (Long part_id : camp_o.get().getParticipant_ids()) {
-            var p_o = participantRepository.findById(part_id);
+        for (Long part_id : camp_o.get().getCounsellor_ids()) {
+            var p_o = counsellorRepository.findById(part_id);
             if (p_o.isPresent()) {
                 if (p_o.get().getName().equals(name)) {
                     return ResponseEntity.ok(p_o.get());

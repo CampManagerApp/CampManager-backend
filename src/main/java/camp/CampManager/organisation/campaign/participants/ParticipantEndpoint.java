@@ -25,6 +25,14 @@ public class ParticipantEndpoint {
         return participantService.getAllParticipantsOfCampaign(orgId, campId);
     }
 
+    @GetMapping("/{orgId}/campaign/{campId}/participant/info")
+    @ResponseBody
+    public ResponseEntity<Participant> getCampaignParticipants(@PathVariable("orgId") Long orgId,
+                                                               @PathVariable("campId") Long campId,
+                                                               @RequestBody Map<String, String> input){
+        return participantService.getInfoOfCampaignParticipant(orgId, campId, input);
+    }
+
     @PostMapping("/{orgId}/campaign/{campId}/participant")
     @ResponseBody
     public ResponseEntity<String> addNewParticipantToCampaign(@PathVariable("orgId") Long orgId,
