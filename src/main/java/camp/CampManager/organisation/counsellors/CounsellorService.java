@@ -29,15 +29,15 @@ public class CounsellorService {
             return ResponseEntity.notFound().build();
         }
         var campaign = camp_o.get();
-        var participants = new LinkedList<Counsellor>();
+        var counsellors = new LinkedList<Counsellor>();
         for (Long part_id : campaign.getCounsellor_ids()) {
             if (counsellorRepository.findById(part_id).isPresent()) {
-                participants.add(counsellorRepository.findById(part_id).get());
+                counsellors.add(counsellorRepository.findById(part_id).get());
             } else {
                 return ResponseEntity.notFound().build();
             }
         }
-        return ResponseEntity.ok(participants);
+        return ResponseEntity.ok(counsellors);
     }
 
     public ResponseEntity<String> addNewCounsellorToCampaign(Long orgId, Long campId, Map<String, String> input) throws URISyntaxException {
@@ -45,16 +45,16 @@ public class CounsellorService {
         if (camp_o.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        var participant_builder = Counsellor.builder();
+        var counsellor_builder = Counsellor.builder();
         if (input.containsKey("name")) {
-            participant_builder.name(input.get("name"));
+            counsellor_builder.name(input.get("name"));
         } else {
             return ResponseEntity.badRequest().body("Name of participant missing");
         }
-        if (input.containsKey("parents_contact")) {
-            participant_builder.parents_contact(input.get("parents_contact"));
+        if (input.containsKey("email")) {
+            counsellor_builder.email(input.get("email"));
         }
-        var counsellor = participant_builder.build();
+        var counsellor = counsellor_builder.build();
         counsellorRepository.save(counsellor);
         campaignService.addCounsellorToCampaign(camp_o.get(), counsellor);
         return ResponseEntity.created(new URI("/organisation/id/campaign/id/participant")).build();
@@ -69,10 +69,9 @@ public class CounsellorService {
         if (input.containsKey("name")) {
             name = input.get("name");
         } else {
-            return ResponseEntity.badRequest().body("Name of participant missing");
+            return ResponseEntity.badRequest().body("Name of counsellor missing");
         }
         var campaign = camp_o.get();
-        var new_ids = campaign.getCounsellor_ids();
         Counsellor to_delete = null;
         for (Long part_id : campaign.getCounsellor_ids()) {
             var p_o = counsellorRepository.findById(part_id);
@@ -102,7 +101,7 @@ public class CounsellorService {
             return ResponseEntity.badRequest().build();
         }
         var campaign = camp_o.get();
-        for (Long part_id : camp_o.get().getCounsellor_ids()) {
+        for (Long part_id : campaign.getCounsellor_ids()) {
             var p_o = counsellorRepository.findById(part_id);
             if (p_o.isPresent()) {
                 if (p_o.get().getName().equals(name)) {

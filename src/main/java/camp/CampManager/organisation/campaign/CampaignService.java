@@ -1,6 +1,7 @@
 package camp.CampManager.organisation.campaign;
 
 import camp.CampManager.organisation.campaign.participants.Participant;
+import camp.CampManager.organisation.counsellors.Counsellor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +62,20 @@ public class CampaignService {
 
     public void deleteParticipantFromCampaign(Campaign campaign, Participant participant) {
         campaign.getParticipant_ids().remove(participant.getId());
+        campaignRepository.save(campaign);
+    }
+
+    public void addCounsellorToCampaign(Campaign campaign, Counsellor counsellor) {
+        var ids = campaign.getCounsellor_ids();
+        if (!ids.contains(counsellor.getId())){
+            ids.add(counsellor.getId());
+            campaign.setCounsellor_ids(ids);
+            campaignRepository.save(campaign);
+        }
+    }
+
+    public void deleteCounsellorFromCampaign(Campaign campaign, Counsellor counsellor) {
+        campaign.getCounsellor_ids().remove(counsellor.getId());
         campaignRepository.save(campaign);
     }
 }

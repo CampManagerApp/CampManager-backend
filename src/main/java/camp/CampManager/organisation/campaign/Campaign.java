@@ -28,7 +28,6 @@ public class Campaign {
 
     @Convert(converter = StringListConverter.class)
     private List<Long> participant_ids;
-    /*
-    private List<Counsellor> counsellors;
-     */
+    @Convert(converter = StringListConverter.class)
+    private List<Long> counsellor_ids;
 }
