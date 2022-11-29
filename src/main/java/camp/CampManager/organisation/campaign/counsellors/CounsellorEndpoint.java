@@ -1,4 +1,4 @@
-package camp.CampManager.organisation.counsellors;
+package camp.CampManager.organisation.campaign.counsellors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

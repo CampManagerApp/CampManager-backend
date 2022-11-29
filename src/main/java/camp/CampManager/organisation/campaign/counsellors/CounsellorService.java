@@ -1,4 +1,4 @@
-package camp.CampManager.organisation.counsellors;
+package camp.CampManager.organisation.campaign.counsellors;
 
 import camp.CampManager.organisation.campaign.CampaignRepository;
 import camp.CampManager.organisation.campaign.CampaignService;
