@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class ParticipantEndpoint {
     @ResponseBody
     public ResponseEntity<String> addNewParticipantToCampaign(@PathVariable("orgId") Long orgId,
                                                               @PathVariable("campId") Long campId,
-                                                              @RequestBody Map<String, String> input) throws URISyntaxException {
+                                                              @RequestBody Map<String, String> input) throws URISyntaxException, ParseException {
         return participantService.addNewParticipantToCampaign(orgId, campId, input);
     }
 
