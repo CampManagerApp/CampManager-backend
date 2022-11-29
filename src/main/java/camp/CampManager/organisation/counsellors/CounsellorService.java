@@ -2,6 +2,7 @@ package camp.CampManager.organisation.counsellors;
 
 import camp.CampManager.organisation.campaign.CampaignRepository;
 import camp.CampManager.organisation.campaign.CampaignService;
+import camp.CampManager.users.Gender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +25,8 @@ public class CounsellorService {
     private CampaignRepository campaignRepository;
     @Autowired
     private CampaignService campaignService;
+
+    private final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
     public ResponseEntity<List<Counsellor>> getAllCounsellorsOfCampaign(Long orgId, Long campId) {
         var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
@@ -40,24 +45,54 @@ public class CounsellorService {
         return ResponseEntity.ok(counsellors);
     }
 
-    public ResponseEntity<String> addNewCounsellorToCampaign(Long orgId, Long campId, Map<String, String> input) throws URISyntaxException {
+    public ResponseEntity<String> addNewCounsellorToCampaign(Long orgId, Long campId, Map<String, String> input) throws URISyntaxException, ParseException {
         var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
         if (camp_o.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         var counsellor_builder = Counsellor.builder();
+        if (input.containsKey("fullName")) {
+            counsellor_builder.fullName(input.get("fullName"));
+        } else {
+            return ResponseEntity.badRequest().body("Name of counsellor missing");
+        }
         if (input.containsKey("name")) {
             counsellor_builder.name(input.get("name"));
-        } else {
-            return ResponseEntity.badRequest().body("Name of participant missing");
         }
-        if (input.containsKey("email")) {
-            counsellor_builder.email(input.get("email"));
+        if (input.containsKey("surnames")) {
+            counsellor_builder.surnames(input.get("surnames"));
+        }
+        if (input.containsKey("gender")) {
+            counsellor_builder.gender(Gender.valueOf(input.get("gender")));
+        }
+        if (input.containsKey("birthday")) {
+            counsellor_builder.birthday(formatter.parse(input.get("birthday")));
+        }
+        if (input.containsKey("emergencyPhone")) {
+            counsellor_builder.emergencyPhone(Integer.parseInt(input.get("emergencyPhone")));
+        }
+        if (input.containsKey("foodAffection")) {
+            counsellor_builder.foodAffection(input.get("foodAffection"));
+        }
+        if (input.containsKey("nonFoodAffection")) {
+            counsellor_builder.nonFoodAffection(input.get("nonFoodAffection"));
+        }
+        if (input.containsKey("medicalObservations")) {
+            counsellor_builder.medicalObservations(input.get("medicalObservations"));
+        }
+        if (input.containsKey("specialMedication")) {
+            counsellor_builder.specialMedication(input.get("specialMedication"));
+        }
+        if (input.containsKey("medicationGuide")) {
+            counsellor_builder.medicationGuide(input.get("medicationGuide"));
+        }
+        if (input.containsKey("additionalInformation")) {
+            counsellor_builder.additionalInformation(input.get("additionalInformation"));
         }
         var counsellor = counsellor_builder.build();
         counsellorRepository.save(counsellor);
         campaignService.addCounsellorToCampaign(camp_o.get(), counsellor);
-        return ResponseEntity.created(new URI("/organisation/id/campaign/id/participant")).build();
+        return ResponseEntity.created(new URI("/organisation/id/campaign/id/counsellor")).build();
     }
 
     public ResponseEntity<String> deleteCounsellorFromCampaign(Long orgId, Long campId, Map<String, String> input) {
@@ -66,8 +101,8 @@ public class CounsellorService {
             return ResponseEntity.notFound().build();
         }
         String name;
-        if (input.containsKey("name")) {
-            name = input.get("name");
+        if (input.containsKey("fullName")) {
+            name = input.get("fullName");
         } else {
             return ResponseEntity.badRequest().body("Name of counsellor missing");
         }
@@ -76,7 +111,7 @@ public class CounsellorService {
         for (Long part_id : campaign.getCounsellor_ids()) {
             var p_o = counsellorRepository.findById(part_id);
             if (p_o.isPresent()) {
-                if (p_o.get().getName().equals(name)) {
+                if (p_o.get().getFullName().equals(name)) {
                     to_delete = p_o.get();
                 }
             }
@@ -95,8 +130,8 @@ public class CounsellorService {
             return ResponseEntity.notFound().build();
         }
         String name;
-        if (input.containsKey("name")) {
-            name = input.get("name");
+        if (input.containsKey("fullName")) {
+            name = input.get("fullName");
         } else {
             return ResponseEntity.badRequest().build();
         }
@@ -104,7 +139,7 @@ public class CounsellorService {
         for (Long part_id : campaign.getCounsellor_ids()) {
             var p_o = counsellorRepository.findById(part_id);
             if (p_o.isPresent()) {
-                if (p_o.get().getName().equals(name)) {
+                if (p_o.get().getFullName().equals(name)) {
                     return ResponseEntity.ok(p_o.get());
                 }
             }
