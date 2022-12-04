@@ -1,9 +1,9 @@
 package camp.CampManager.organisation.campaign.tables;
 
 import camp.CampManager.organisation.campaign.activities.StringStringConverter;
+import camp.CampManager.organisation.campaign.counsellors.Counsellor;
 import camp.CampManager.organisation.campaign.tables.restrictions.Restriction;
 import camp.CampManager.organisation.campaign.tables.restrictions.RestrictionStringConverter;
-import camp.CampManager.organisation.counsellors.Counsellor;
 import lombok.*;
 
 import javax.persistence.*;

@@ -1,7 +1,7 @@
 package camp.CampManager.organisation.campaign.tables;
 
-import camp.CampManager.organisation.counsellors.Counsellor;
-import camp.CampManager.organisation.counsellors.CounsellorRepository;
+import camp.CampManager.organisation.campaign.counsellors.Counsellor;
+import camp.CampManager.organisation.campaign.counsellors.CounsellorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.AttributeConverter;

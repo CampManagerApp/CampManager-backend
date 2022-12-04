@@ -1,8 +1,8 @@
 package camp.CampManager.organisation.campaign.tables.restrictions;
 
+import camp.CampManager.organisation.campaign.counsellors.Counsellor;
 import camp.CampManager.organisation.campaign.tables.CampTable;
 import camp.CampManager.organisation.campaign.tables.Task;
-import camp.CampManager.organisation.counsellors.Counsellor;
 
 import java.util.Comparator;
 import java.util.LinkedHashSet;

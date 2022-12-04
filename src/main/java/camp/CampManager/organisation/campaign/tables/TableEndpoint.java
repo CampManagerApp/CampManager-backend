@@ -1,13 +1,8 @@
 package camp.CampManager.organisation.campaign.tables;
 
 import lombok.AllArgsConstructor;
-import org.jobrunr.jobs.lambdas.JobLambda;
-import org.jobrunr.jobs.mappers.JobMapper;
 import org.jobrunr.scheduling.JobScheduler;
-import org.jobrunr.storage.InMemoryStorageProvider;
-import org.jobrunr.storage.StorageProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
