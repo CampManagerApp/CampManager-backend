@@ -105,6 +105,15 @@ public class ActivitiesService {
         return ResponseEntity.created(new URI("/organisation/id/campaign/id/activities")).build();
     }
 
+    public void createNewActivityObjectInCampaign(Long orgId, Long campId, Activity activity) {
+        var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
+        if (camp_o.isEmpty()) {
+            return;
+        }
+        activity.setCampaignId(camp_o.get().getId());
+        activitiesRepository.save(activity);
+    }
+
     public ResponseEntity<String> modifyActivityInCampaign(Long orgId, Long campId, Map<String, String> input) {
         var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
         if (camp_o.isEmpty()) {
