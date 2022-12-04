@@ -16,12 +16,15 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CampTable {
-    @Convert(converter = RestrictionStringConverter.class)
-    public List<Restriction> restrictions;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+
+    @Convert(converter = RestrictionStringConverter.class)
+    public List<Restriction> restrictions;
+    private Long campaignId;
+
     @Convert(converter = StringStringConverter.class)
     private List<String> days;
     @Convert(converter = TaskStringConverter.class)
@@ -30,6 +33,7 @@ public class CampTable {
     private List<Counsellor> counsellors;
     @Convert(converter = MapStringConverter.class)
     private Map<String, Set<String>> grid;
+    private String tableName;
 
     public CampTable copy() {
         CampTable copy = new CampTable();

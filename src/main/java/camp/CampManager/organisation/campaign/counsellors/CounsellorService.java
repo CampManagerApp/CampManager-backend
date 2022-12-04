@@ -28,6 +28,10 @@ public class CounsellorService {
 
     private final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
+    public CounsellorRepository getRepository() {
+        return counsellorRepository;
+    }
+
     public ResponseEntity<List<Counsellor>> getAllCounsellorsOfCampaign(Long orgId, Long campId) {
         var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
         if (camp_o.isEmpty()) {
