@@ -68,6 +68,9 @@ public class CounsellorService {
         if (input.containsKey("birthday")) {
             counsellor_builder.birthday(formatter.parse(input.get("birthday")));
         }
+        if (input.containsKey("is_first_year")) {
+            counsellor_builder.is_first_year(Boolean.parseBoolean(input.get("is_first_year")));
+        }
         if (input.containsKey("emergencyPhone")) {
             counsellor_builder.emergencyPhone(Integer.parseInt(input.get("emergencyPhone")));
         }
