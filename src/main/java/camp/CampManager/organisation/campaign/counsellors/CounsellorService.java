@@ -95,15 +95,6 @@ public class CounsellorService {
         return ResponseEntity.created(new URI("/organisation/id/campaign/id/counsellor")).build();
     }
 
-    public void addNewCounsellorObjectToCampaign(Long orgId, Long campId, Counsellor counsellor) {
-        var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
-        if (camp_o.isEmpty()) {
-            return;
-        }
-        counsellorRepository.save(counsellor);
-        campaignService.addCounsellorToCampaign(camp_o.get(), counsellor);
-    }
-
     public ResponseEntity<String> deleteCounsellorFromCampaign(Long orgId, Long campId, Map<String, String> input) {
         var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
         if (camp_o.isEmpty()) {

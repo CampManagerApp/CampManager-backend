@@ -52,107 +52,98 @@ public class ParticipantService {
         }
         var participant_builder = Participant.builder();
         if (input.containsKey("fullName")) {
-            if (participantRepository.existsByFullName(input.get("fullName"))) {
+            if (participantRepository.existsByFullName(input.get("fullName"))){
                 return ResponseEntity.badRequest().body("Participant already exists");
             }
             participant_builder.fullName(input.get("fullName"));
         } else {
             return ResponseEntity.badRequest().body("Name of participant missing");
         }
-        if (input.containsKey("name")) {
+        if (input.containsKey("name")){
             participant_builder.name(input.get("name"));
         }
-        if (input.containsKey("surnames")) {
+        if (input.containsKey("surnames")){
             participant_builder.surnames(input.get("surnames"));
         }
-        if (input.containsKey("gender")) {
+        if (input.containsKey("gender")){
             participant_builder.gender(Gender.valueOf(input.get("gender")));
         }
-        if (input.containsKey("birthday")) {
+        if (input.containsKey("birthday")){
             participant_builder.birthday(formatter.parse(input.get("birthday")));
         }
-        if (input.containsKey("school_year")) {
+        if (input.containsKey("school_year")){
             participant_builder.school_year(input.get("school_year"));
         }
-        if (input.containsKey("parentOneFullName")) {
+        if (input.containsKey("parentOneFullName")){
             participant_builder.parentOneFullName(input.get("parentOneFullName"));
         }
-        if (input.containsKey("parentTwoFullName")) {
+        if (input.containsKey("parentTwoFullName")){
             participant_builder.parentTwoFullName(input.get("parentTwoFullName"));
         }
-        if (input.containsKey("contactEmailOne")) {
+        if (input.containsKey("contactEmailOne")){
             participant_builder.contactEmailOne(input.get("contactEmailOne"));
         }
-        if (input.containsKey("contactEmailTwo")) {
+        if (input.containsKey("contactEmailTwo")){
             participant_builder.contactEmailTwo(input.get("contactEmailTwo"));
         }
-        if (input.containsKey("phoneNumberOne")) {
+        if (input.containsKey("phoneNumberOne")){
             participant_builder.phoneNumberOne(Integer.parseInt(input.get("phoneNumberOne")));
         }
-        if (input.containsKey("phoneNumberTwo")) {
+        if (input.containsKey("phoneNumberTwo")){
             participant_builder.phoneNumberTwo(Integer.parseInt(input.get("phoneNumberTwo")));
         }
-        if (input.containsKey("phoneNumberFix")) {
+        if (input.containsKey("phoneNumberFix")){
             participant_builder.phoneNumberFix(Integer.parseInt(input.get("phoneNumberFix")));
         }
-        if (input.containsKey("bankIBAN")) {
+        if (input.containsKey("bankIBAN")){
             participant_builder.bankIBAN(input.get("bankIBAN"));
         }
-        if (input.containsKey("houseAddress")) {
+        if (input.containsKey("houseAddress")){
             participant_builder.houseAddress(input.get("houseAddress"));
         }
-        if (input.containsKey("postalCode")) {
+        if (input.containsKey("postalCode")){
             participant_builder.postalCode(Integer.parseInt(input.get("postalCode")));
         }
-        if (input.containsKey("townName")) {
+        if (input.containsKey("townName")){
             participant_builder.townName(input.get("townName"));
         }
-        if (input.containsKey("county")) {
+        if (input.containsKey("county")){
             participant_builder.county(input.get("county"));
         }
-        if (input.containsKey("healthCardCIP")) {
+        if (input.containsKey("healthCardCIP")){
             participant_builder.healthCardCIP(input.get("healthCardCIP"));
         }
-        if (input.containsKey("insuranceName")) {
+        if (input.containsKey("insuranceName")){
             participant_builder.insuranceName(input.get("insuranceName"));
         }
-        if (input.containsKey("foodAffection")) {
+        if (input.containsKey("foodAffection")){
             participant_builder.foodAffection(input.get("foodAffection"));
         }
-        if (input.containsKey("nonFoodAffection")) {
+        if (input.containsKey("nonFoodAffection")){
             participant_builder.nonFoodAffection(input.get("nonFoodAffection"));
         }
-        if (input.containsKey("medicalObservations")) {
+        if (input.containsKey("medicalObservations")){
             participant_builder.medicalObservations(input.get("medicalObservations"));
         }
-        if (input.containsKey("ibuprofen")) {
+        if (input.containsKey("ibuprofen")){
             participant_builder.ibuprofen(Boolean.parseBoolean(input.get("ibuprofen")));
         }
-        if (input.containsKey("paracetamol")) {
+        if (input.containsKey("paracetamol")){
             participant_builder.paracetamol(Boolean.parseBoolean(input.get("paracetamol")));
         }
-        if (input.containsKey("specialMedication")) {
+        if (input.containsKey("specialMedication")){
             participant_builder.specialMedication(input.get("specialMedication"));
         }
-        if (input.containsKey("medicationGuide")) {
+        if (input.containsKey("medicationGuide")){
             participant_builder.medicationGuide(input.get("medicationGuide"));
         }
-        if (input.containsKey("additionalInformation")) {
+        if (input.containsKey("additionalInformation")){
             participant_builder.additionalInformation(input.get("additionalInformation"));
         }
         var participant_instance = participant_builder.build();
         participantRepository.save(participant_instance);
         campaignService.addParticipantToCampaign(camp_o.get(), participant_instance);
         return ResponseEntity.created(new URI("/organisation/id/campaign/id/participant")).build();
-    }
-
-    public void addParticipantObjectToCampaign(Long orgId, Long campId, Participant participant) {
-        var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
-        if (camp_o.isEmpty()) {
-            return;
-        }
-        participantRepository.save(participant);
-        campaignService.addParticipantToCampaign(camp_o.get(), participant);
     }
 
     public ResponseEntity<String> deleteParticipantFromCampaign(Long orgId, Long campId, Map<String, String> input) {
@@ -177,7 +168,7 @@ public class ParticipantService {
                 }
             }
         }
-        if (to_delete == null) {
+        if (to_delete == null){
             return ResponseEntity.notFound().build();
         }
         campaignService.deleteParticipantFromCampaign(campaign, to_delete);
