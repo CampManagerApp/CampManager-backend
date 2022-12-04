@@ -24,6 +24,8 @@ public class Counsellor {
     private Gender gender;
     private Date birthday;
 
+    private boolean is_first_year;
+
     private int emergencyPhone;
 
     private String foodAffection;
