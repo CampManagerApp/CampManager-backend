@@ -64,6 +64,7 @@ public class TableService {
     }
 
     public ResponseEntity<CampTable> updateTableByName(Long orgId, Long campId, String tableName) {
+        // TODO
         return null;
     }
 
@@ -90,5 +91,13 @@ public class TableService {
         var restrictions = new LinkedList<Restriction>();
         restrictionRepository.findAllById(tableObject.getRestrictions_ids()).forEach(restrictions::add);
         tableObject.setRestrictions(restrictions);
+    }
+
+    public List<Restriction> parseRestrictions(String restrictions) {
+        // TODO
+    }
+
+    public List<Counsellor> parseCounsellors(String counsellors) {
+        // TODO
     }
 }
