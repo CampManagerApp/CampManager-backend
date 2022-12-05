@@ -1,9 +1,9 @@
 package camp.CampManager.organisation.campaign.tables;
 
+import camp.CampManager.organisation.campaign.StringListConverter;
 import camp.CampManager.organisation.campaign.activities.StringStringConverter;
 import camp.CampManager.organisation.campaign.counsellors.Counsellor;
 import camp.CampManager.organisation.campaign.tables.restrictions.Restriction;
-import camp.CampManager.organisation.campaign.tables.restrictions.RestrictionStringConverter;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,20 +20,26 @@ public class CampTable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-
-    @Convert(converter = RestrictionStringConverter.class)
-    public List<Restriction> restrictions;
     private Long campaignId;
 
     @Convert(converter = StringStringConverter.class)
     private List<String> days;
-    @Convert(converter = TaskStringConverter.class)
+
+    @Transient
+    public List<Restriction> restrictions;
+    @Convert(converter = StringListConverter.class)
+    public List<Long> restrictions_ids;
+    @Convert(converter = StringListConverter.class)
+    private List<Long> task_ids;
+    @Transient
     private List<Task> tasks;
-    @Convert(converter = CounsellorStringConverter.class)
-    private List<Counsellor> counsellors;
     @Convert(converter = MapStringConverter.class)
     private Map<String, Set<String>> grid;
     private String tableName;
+    @Convert(converter = StringListConverter.class)
+    private List<Long> counsellor_ids;
+    @Transient
+    private List<Counsellor> counsellors;
 
     public CampTable copy() {
         CampTable copy = new CampTable();
@@ -50,7 +56,6 @@ public class CampTable {
     }
 
     public boolean solve() {
-        // First, set empty values by user choice
         return this._solve();
     }
 
