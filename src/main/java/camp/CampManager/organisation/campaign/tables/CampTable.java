@@ -35,11 +35,13 @@ public class CampTable {
     private List<Task> tasks;
     @Convert(converter = MapStringConverter.class)
     private Map<String, Set<String>> grid;
-    private String tableName;
     @Convert(converter = StringListConverter.class)
     private List<Long> counsellor_ids;
     @Transient
     private List<Counsellor> counsellors;
+
+    private String tableName;
+    private String status;
 
     public CampTable copy() {
         CampTable copy = new CampTable();
@@ -55,8 +57,13 @@ public class CampTable {
         return copy;
     }
 
-    public boolean solve() {
-        return this._solve();
+    public void solve() {
+        this.status = "PROCESSING";
+        if (this._solve()) {
+            this.status = "SOLVED";
+        } else {
+            this.status = "FAILED";
+        }
     }
 
     private boolean _solve() {
@@ -64,7 +71,6 @@ public class CampTable {
         if (next_slot == null) {
             return true;
         }
-        System.out.println(next_slot);
         Set<Set<String>> possible_assignments = this.get_possible_assignments(next_slot);
         for (Restriction restriction : this.restrictions) {
             possible_assignments = restriction.filter(this.copy(), next_slot, possible_assignments);
@@ -75,7 +81,6 @@ public class CampTable {
         }
         int i = 0;
         for (Set<String> assignment : possible_assignments) {
-            System.out.print(i + "/" + possible_assignments.size() + " ");
             i++;
             CampTable copy = this.copy();
             copy.grid.put(next_slot, assignment);
