@@ -117,9 +117,16 @@ public class NameEndpoint {
         }
         var organisation = organisation_o.get();
         var user = user_o.get();
+        var membershipOfUser = userService.findUserMembership(user, organisation);
+        if (membershipOfUser.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
         var memb = nameService.findNameMembership(fullname, organisation);
         if (memb.isPresent()) {
             var m = memb.get();
+            if (m.is_claimed()) {
+                return ResponseEntity.badRequest().build();
+            }
             m.setUserId(user.getId());
             m.set_claimed(true);
             userService.saveMembership(m);
