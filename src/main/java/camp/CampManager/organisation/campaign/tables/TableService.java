@@ -95,9 +95,11 @@ public class TableService {
 
     public List<Restriction> parseRestrictions(String restrictions) {
         // TODO
+        return null;
     }
 
     public List<Counsellor> parseCounsellors(String counsellors) {
         // TODO
+        return null;
     }
 }
