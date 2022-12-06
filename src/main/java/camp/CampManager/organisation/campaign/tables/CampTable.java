@@ -71,7 +71,7 @@ public class CampTable {
         if (next_slot == null) {
             return true;
         }
-        Set<Set<String>> possible_assignments = this.get_possible_assignments(next_slot);
+        Set<Set<Counsellor>> possible_assignments = this.get_possible_assignments(next_slot);
         for (Restriction restriction : this.restrictions) {
             possible_assignments = restriction.filter(this.copy(), next_slot, possible_assignments);
             if (possible_assignments.size() == 0) {
@@ -80,10 +80,12 @@ public class CampTable {
             }
         }
         int i = 0;
-        for (Set<String> assignment : possible_assignments) {
+        for (Set<Counsellor> assignment : possible_assignments) {
             i++;
             CampTable copy = this.copy();
-            copy.grid.put(next_slot, assignment);
+            Set<String> assignmentOfStrings = new HashSet<>();
+            assignment.forEach(e -> assignmentOfStrings.add(e.getFullName()));
+            copy.grid.put(next_slot, assignmentOfStrings);
             if (copy._solve()) {
                 this.grid = copy.grid;
                 return true;
@@ -92,11 +94,11 @@ public class CampTable {
         return false;
     }
 
-    public Set<Set<String>> get_possible_assignments(String next_slot) {
+    public Set<Set<Counsellor>> get_possible_assignments(String next_slot) {
         String taskName = next_slot.split(":")[1];
         for (Task task : tasks) {
             if (task.name.equals(taskName)) {
-                Set<Set<String>> assignments = new HashSet<>();
+                Set<Set<Counsellor>> assignments = new HashSet<>();
                 for (int i = task.maxPlaces; i >= task.minPlaces; i--) {
                     assignments.addAll(this._get_possible_combinations(i));
                 }
@@ -106,29 +108,28 @@ public class CampTable {
         return new HashSet<>();
     }
 
-    private Set<Set<String>> _get_possible_combinations(int length) {
+    private Set<Set<Counsellor>> _get_possible_combinations(int length) {
         if (length <= 0) {
             return new HashSet<>();
         } else if (length == 1) {
-            Set<Set<String>> combinations = new HashSet<>();
+            Set<Set<Counsellor>> combinations = new HashSet<>();
             for (Counsellor counsellorObject : counsellors) {
-                String counsellor = counsellorObject.getFullName();
-                Set<String> combination = new HashSet<>();
-                combination.add(counsellor);
+                Set<Counsellor> combination = new HashSet<>();
+                combination.add(counsellorObject);
                 combinations.add(combination);
             }
             return combinations;
         } else {
-            Set<Set<String>> combinations = new HashSet<>();
+            Set<Set<Counsellor>> combinations = new HashSet<>();
             for (Counsellor counsellorObject : counsellors) {
                 String counsellor = counsellorObject.getFullName();
-                Set<Set<String>> subCombinations = new HashSet<>();
-                for (Set<String> subCombination : this._get_possible_combinations(length - 1)) {
-                    if (subCombination.contains(counsellor)) {
+                Set<Set<Counsellor>> subCombinations = new HashSet<>();
+                for (Set<Counsellor> subCombination : this._get_possible_combinations(length - 1)) {
+                    if (subCombination.contains(counsellorObject)) {
                         continue;
                     }
-                    Set<String> combination = new HashSet<>();
-                    combination.add(counsellor);
+                    Set<Counsellor> combination = new HashSet<>();
+                    combination.add(counsellorObject);
                     combination.addAll(subCombination);
                     subCombinations.add(combination);
                 }

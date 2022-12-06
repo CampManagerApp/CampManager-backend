@@ -1,5 +1,6 @@
 package camp.CampManager.organisation.campaign.tables.restrictions;
 
+import camp.CampManager.organisation.campaign.counsellors.Counsellor;
 import camp.CampManager.organisation.campaign.tables.CampTable;
 import camp.CampManager.organisation.campaign.tables.Task;
 
@@ -17,8 +18,8 @@ public class TaskTaskRestriction extends Restriction {
     }
 
     @Override
-    public Set<Set<String>> filter(CampTable campTable, String next_slot, Set<Set<String>> possible_assignments) {
-        Set<Set<String>> newAssignments = new HashSet<>();
+    public Set<Set<Counsellor>> filter(CampTable campTable, String next_slot, Set<Set<Counsellor>> possible_assignments) {
+        Set<Set<Counsellor>> newAssignments = new HashSet<>();
         String day = next_slot.split(":")[0];
         String task = next_slot.split(":")[1];
         if (!task.equals(t1.name) && !task.equals(t2.name)) {
@@ -29,9 +30,11 @@ public class TaskTaskRestriction extends Restriction {
             if (task2assigned == null) {
                 return possible_assignments;
             } else {
-                for (Set<String> assignment : possible_assignments) {
+                for (Set<Counsellor> assignment : possible_assignments) {
                     boolean add = true;
-                    for (String assigned : assignment) {
+                    Set<String> assignmentOfStrings = new HashSet<>();
+                    assignment.forEach(e -> assignmentOfStrings.add(e.getFullName()));
+                    for (String assigned : assignmentOfStrings) {
                         if (task2assigned.contains(assigned)) {
                             add = false;
                             break;
@@ -47,9 +50,11 @@ public class TaskTaskRestriction extends Restriction {
             if (task2assigned == null) {
                 return possible_assignments;
             } else {
-                for (Set<String> assignment : possible_assignments) {
+                for (Set<Counsellor> assignment : possible_assignments) {
                     boolean add = true;
-                    for (String assigned : assignment) {
+                    Set<String> assignmentOfStrings = new HashSet<>();
+                    assignment.forEach(e -> assignmentOfStrings.add(e.getFullName()));
+                    for (String assigned : assignmentOfStrings) {
                         if (task2assigned.contains(assigned)) {
                             add = false;
                             break;

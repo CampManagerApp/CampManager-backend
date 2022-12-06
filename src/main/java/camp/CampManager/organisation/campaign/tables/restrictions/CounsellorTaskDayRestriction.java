@@ -1,5 +1,6 @@
 package camp.CampManager.organisation.campaign.tables.restrictions;
 
+import camp.CampManager.organisation.campaign.counsellors.Counsellor;
 import camp.CampManager.organisation.campaign.tables.CampTable;
 import camp.CampManager.organisation.campaign.tables.Task;
 
@@ -19,15 +20,17 @@ public class CounsellorTaskDayRestriction extends Restriction {
     }
 
     @Override
-    public Set<Set<String>> filter(CampTable campTable, String next_slot, Set<Set<String>> possible_assignments) {
-        Set<Set<String>> newAssignments = new HashSet<>();
+    public Set<Set<Counsellor>> filter(CampTable campTable, String next_slot, Set<Set<Counsellor>> possible_assignments) {
+        Set<Set<Counsellor>> newAssignments = new HashSet<>();
         String day = next_slot.split(":")[0];
         String task = next_slot.split(":")[1];
         if (!day.equals(this.day) || !task.equals(taskName)) {
             return possible_assignments;
         }
-        for (Set<String> assignment : possible_assignments) {
-            if (!assignment.contains(counsellor)) {
+        for (Set<Counsellor> assignment : possible_assignments) {
+            Set<String> assignmentOfStrings = new HashSet<>();
+            assignment.forEach(e -> assignmentOfStrings.add(e.getFullName()));
+            if (!assignmentOfStrings.contains(counsellor)) {
                 newAssignments.add(assignment);
             }
         }

@@ -1,5 +1,6 @@
 package camp.CampManager.organisation.campaign.tables.restrictions;
 
+import camp.CampManager.organisation.campaign.counsellors.Counsellor;
 import camp.CampManager.organisation.campaign.tables.CampTable;
 import camp.CampManager.organisation.campaign.tables.Task;
 
@@ -14,7 +15,7 @@ public class SpecialRestriction extends Restriction {
     String desiredAttributeValue;
 
     @Override
-    public Set<Set<String>> filter(CampTable campTable, String next_slot, Set<Set<String>> possible_assignments) {
+    public Set<Set<Counsellor>> filter(CampTable campTable, String next_slot, Set<Set<Counsellor>> possible_assignments) {
         // TODO
         return null;
     }

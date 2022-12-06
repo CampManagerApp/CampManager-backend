@@ -5,6 +5,7 @@ import camp.CampManager.organisation.campaign.tables.CampTable;
 import camp.CampManager.organisation.campaign.tables.Task;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,10 +20,10 @@ public class SortByFavouriteRestriction extends Restriction {
      *  If they are the same size, the one that has the LEAST total deviation from the average goes first
      */
     @Override
-    public Set<Set<String>> filter(CampTable campTable, String next_slot, Set<Set<String>> possible_assignments) {
-        return possible_assignments.stream().sorted(new Comparator<Set<String>>() {
+    public Set<Set<Counsellor>> filter(CampTable campTable, String next_slot, Set<Set<Counsellor>> possible_assignments) {
+        return possible_assignments.stream().sorted(new Comparator<Set<Counsellor>>() {
             @Override
-            public int compare(Set<String> o1, Set<String> o2) {
+            public int compare(Set<Counsellor> o1, Set<Counsellor> o2) {
                 if (o1.size() != o2.size()) {
                     // if o1.size() > o2.size() it should go first, so it needs to return positive
                     return -Integer.compare(o1.size(), o2.size());
@@ -34,8 +35,10 @@ public class SortByFavouriteRestriction extends Restriction {
     }
 
     // The smaller, the better
-    public float deviation(CampTable copy, String next_slot, Set<String> assignment) {
-        copy.getGrid().put(next_slot, assignment);
+    public float deviation(CampTable copy, String next_slot, Set<Counsellor> assignment) {
+        Set<String> assignmentOfStrings = new HashSet<>();
+        assignment.forEach(e -> assignmentOfStrings.add(e.getFullName()));
+        copy.getGrid().put(next_slot, assignmentOfStrings);
 
         int repetition = 0;
         float discount = 1.0F;
@@ -62,8 +65,10 @@ public class SortByFavouriteRestriction extends Restriction {
     }
 
     // The smaller, the better
-    public float repetition(CampTable copy, String next_slot, Set<String> assignment) {
-        copy.getGrid().put(next_slot, assignment);
+    public float repetition(CampTable copy, String next_slot, Set<Counsellor> assignment) {
+        Set<String> assignmentOfStrings = new HashSet<>();
+        assignment.forEach(e -> assignmentOfStrings.add(e.getFullName()));
+        copy.getGrid().put(next_slot, assignmentOfStrings);
 
         String task = next_slot.split(":")[1];
 
@@ -87,8 +92,10 @@ public class SortByFavouriteRestriction extends Restriction {
     }
 
     // The smaller, the better
-    public float singularity(CampTable copy, String next_slot, Set<String> assignment) {
-        copy.getGrid().put(next_slot, assignment);
+    public float singularity(CampTable copy, String next_slot, Set<Counsellor> assignment) {
+        Set<String> assignmentOfStrings = new HashSet<>();
+        assignment.forEach(e -> assignmentOfStrings.add(e.getFullName()));
+        copy.getGrid().put(next_slot, assignmentOfStrings);
 
         String day = next_slot.split(":")[0];
 
@@ -111,7 +118,7 @@ public class SortByFavouriteRestriction extends Restriction {
         return singularity;
     }
 
-    public float average(CampTable copy, String next_slot, Set<String> assignment) {
+    public float average(CampTable copy, String next_slot, Set<Counsellor> assignment) {
         return (float) (0.33 * deviation(copy, next_slot, assignment) +
                 (0.33 * repetition(copy, next_slot, assignment)) +
                 (0.33 * singularity(copy, next_slot, assignment)));

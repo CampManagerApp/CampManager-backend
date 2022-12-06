@@ -1,5 +1,6 @@
 package camp.CampManager.organisation.campaign.tables.restrictions;
 
+import camp.CampManager.organisation.campaign.counsellors.Counsellor;
 import camp.CampManager.organisation.campaign.tables.CampTable;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,5 +23,5 @@ public abstract class Restriction {
      *
      * @param possible_assignments List of possible assignments
      */
-    public abstract Set<Set<String>> filter(CampTable campTable, String next_slot, Set<Set<String>> possible_assignments);
+    public abstract Set<Set<Counsellor>> filter(CampTable campTable, String next_slot, Set<Set<Counsellor>> possible_assignments);
 }
