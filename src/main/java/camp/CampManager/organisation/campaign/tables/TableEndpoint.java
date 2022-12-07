@@ -32,6 +32,8 @@ public class TableEndpoint {
     private CounsellorRepository counsellorRepository;
     @Autowired
     private CampaignRepository campaignRepository;
+    @Autowired
+    private TaskRepository taskRepository;
 
     @GetMapping("/{orgId}/campaign/{campId}/tables/all")
     @ResponseBody
@@ -147,20 +149,14 @@ public class TableEndpoint {
         if (table.getStatusCode() != HttpStatus.OK || table.getBody() == null) {
             return ResponseEntity.badRequest().build();
         }
-        scheduler.enqueue(() -> {
-            System.out.println("STARTING TABLE JOB");
-            //solveTable(table);
-            // TODO ficar que solucioni la taula aqui i sigui menos lento
-            Thread.sleep(10000);
-            System.out.println("JOB FINISHED");
-        });
+        CampTable tableObject = table.getBody();
+        solveTable(tableObject);
         return ResponseEntity.ok().build();
     }
 
-    public void solveTable(ResponseEntity<CampTable> table) {
-        CampTable tableObject = table.getBody();
-        assert tableObject != null;
-        tableService.populateTable(tableObject);
-        tableObject.solve();
+    public void solveTable(CampTable table) {
+        tableService.populateTable(table);
+        table.solve(tableRepository);
+        tableRepository.save(table);
     }
 }

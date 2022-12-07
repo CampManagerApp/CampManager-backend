@@ -168,6 +168,7 @@ public class TableService {
             for (Counsellor c : counsellorsInCampaign) {
                 if (c.getFullName().equals(s)) {
                     exists = true;
+                    counsellorList.add(c);
                     break;
                 }
             }

@@ -43,6 +43,9 @@ public class CounsellorDayRestriction extends Restriction {
             boolean add = true;
             for (Task t1 : copy.getTasks()) {
                 Set<String> taskAssigned = copy.getGrid().get(day + ":" + t1.name);
+                if (taskAssigned == null) {
+                    continue;
+                }
                 if (taskAssigned.contains(counsellor)) {
                     add = false;
                     break;

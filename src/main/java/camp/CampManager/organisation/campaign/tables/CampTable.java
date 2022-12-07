@@ -57,8 +57,9 @@ public class CampTable {
         return copy;
     }
 
-    public void solve() {
+    public void solve(TableRepository tableRepository) {
         this.status = "PROCESSING";
+        tableRepository.save(this);
         if (this._solve()) {
             this.status = "SOLVED";
         } else {
@@ -79,9 +80,7 @@ public class CampTable {
                 return false;
             }
         }
-        int i = 0;
         for (Set<Counsellor> assignment : possible_assignments) {
-            i++;
             CampTable copy = this.copy();
             Set<String> assignmentOfStrings = new HashSet<>();
             assignment.forEach(e -> assignmentOfStrings.add(e.getFullName()));
