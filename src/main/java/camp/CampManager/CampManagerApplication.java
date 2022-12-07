@@ -57,24 +57,28 @@ public class CampManagerApplication {
                     .username("joelaumedes")
                     .full_name("Joel Aumedes")
                     .password("joel")
+                    .role("ADMIN")
                     .build();
             CampUser mireia = CampUser.builder()
                     .email("mireia@joel.com")
                     .username("mireiacalvet")
                     .full_name("Mireia Calvet")
                     .password("mireia")
+                    .role("ADMIN")
                     .build();
             CampUser mariona = CampUser.builder()
                     .email("mariona@joel.com")
                     .username("marionavillaro")
                     .full_name("Mariona Villaró")
                     .password("mariona")
+                    .role("ADMIN")
                     .build();
             CampUser robert = CampUser.builder()
                     .email("robert@joel.com")
                     .username("robertcreus")
                     .full_name("Robert Creus")
                     .password("robert")
+                    .role("ADMIN")
                     .build();
 
             userService.saveUser(joel);

@@ -2,20 +2,29 @@ package camp.CampManager.organisation.campaign.tables.restrictions;
 
 import camp.CampManager.organisation.campaign.counsellors.Counsellor;
 import camp.CampManager.organisation.campaign.tables.CampTable;
-import camp.CampManager.organisation.campaign.tables.Task;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
+@NoArgsConstructor
+@Getter
+@Setter
+@DiscriminatorValue("2")
 public class CounsellorTaskDayRestriction extends Restriction {
     public static RestrictionType restrictionType = RestrictionType.COUNSELLOR_TASK_DAY;
     public String counsellor;
     public String taskName;
     public String day;
 
-    public CounsellorTaskDayRestriction(String counsellor, Task t, String day) {
+    public CounsellorTaskDayRestriction(String counsellor, String t, String day) {
         this.counsellor = counsellor;
-        this.taskName = t.getName();
+        this.taskName = t;
         this.day = day;
     }
 

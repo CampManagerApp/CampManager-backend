@@ -1,7 +1,8 @@
 package camp.CampManager.organisation.campaign;
 
-import camp.CampManager.organisation.campaign.participants.Participant;
+import camp.CampManager.organisation.OrganisationRepository;
 import camp.CampManager.organisation.campaign.counsellors.Counsellor;
+import camp.CampManager.organisation.campaign.participants.Participant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,12 +16,23 @@ public class CampaignService {
 
     @Autowired
     private CampaignRepository campaignRepository;
+    @Autowired
+    private OrganisationRepository organisationRepository;
 
     public boolean saveCampaign(Campaign campaign) {
-        if (campaignRepository.findByCampaignNameEqualsAndOrganisationIdEquals(campaign.getCampaignName(), campaign.getOrganisationId()).isPresent()){
+        if (campaignRepository.findByCampaignNameEqualsAndOrganisationIdEquals(campaign.getCampaignName(), campaign.getOrganisationId()).isPresent()) {
             return false;
         } else {
+            var organisation_o = organisationRepository.findById(campaign.getOrganisationId());
+            if (organisation_o.isEmpty()) {
+                return false;
+            }
             campaignRepository.save(campaign);
+            var organisation = organisation_o.get();
+            var ids = organisation.getCampaign_ids();
+            ids.add(campaign.getId());
+            organisation.setCampaign_ids(ids);
+            organisationRepository.save(organisation);
             return true;
         }
     }

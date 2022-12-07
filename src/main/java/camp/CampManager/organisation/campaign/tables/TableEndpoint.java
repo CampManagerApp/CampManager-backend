@@ -1,7 +1,9 @@
 package camp.CampManager.organisation.campaign.tables;
 
+import camp.CampManager.organisation.campaign.CampaignRepository;
 import camp.CampManager.organisation.campaign.counsellors.CounsellorRepository;
 import camp.CampManager.organisation.campaign.tables.restrictions.RestrictionRepository;
+import camp.CampManager.organisation.campaign.tables.restrictions.SortByFavouriteRestriction;
 import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,8 @@ public class TableEndpoint {
     private RestrictionRepository restrictionRepository;
     @Autowired
     private CounsellorRepository counsellorRepository;
+    @Autowired
+    private CampaignRepository campaignRepository;
 
     @GetMapping("/{orgId}/campaign/{campId}/tables/all")
     @ResponseBody
@@ -41,6 +45,10 @@ public class TableEndpoint {
     public ResponseEntity<String> createNewTableInCampaign(@PathVariable("orgId") Long orgId,
                                                            @PathVariable("campId") Long campId,
                                                            @RequestBody Map<String, String> input) throws URISyntaxException {
+        var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
+        if (camp_o.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
         var buildingTable = CampTable.builder();
         if (input.containsKey("tableName")) {
             buildingTable.tableName(input.get("tableName"));
@@ -72,13 +80,23 @@ public class TableEndpoint {
         }
         // Restrictions as list of type,par1,par2[,par3];...
         if (input.containsKey("restrictions")) {
-            buildingTable.restrictions(tableService.parseRestrictions(input.get("restrictions")));
+            var restrictions = tableService.parseRestrictions(input.get("restrictions"));
+            if (restrictions == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            restrictions.add(new SortByFavouriteRestriction());
+            buildingTable.restrictions(restrictions);
         } else {
             buildingTable.restrictions(new LinkedList<>());
         }
         if (input.containsKey("counsellors")) {
-            buildingTable.counsellors(tableService.parseCounsellors(input.get("counsellors")));
+            var counsellors = tableService.parseCounsellors(input.get("counsellors"), camp_o.get());
+            if (counsellors == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            buildingTable.counsellors(counsellors);
         } else {
+            // TODO fer que agafi tots els de la campaign
             buildingTable.counsellors(new LinkedList<>());
         }
         return tableService.createNewTableInCampaign(orgId, campId, buildingTable.build());
@@ -130,10 +148,19 @@ public class TableEndpoint {
             return ResponseEntity.badRequest().build();
         }
         scheduler.enqueue(() -> {
-            CampTable tableObject = table.getBody();
-            tableService.populateTable(tableObject);
-            tableObject.solve();
+            System.out.println("STARTING TABLE JOB");
+            //solveTable(table);
+            // TODO ficar que solucioni la taula aqui i sigui menos lento
+            Thread.sleep(10000);
+            System.out.println("JOB FINISHED");
         });
         return ResponseEntity.ok().build();
+    }
+
+    public void solveTable(ResponseEntity<CampTable> table) {
+        CampTable tableObject = table.getBody();
+        assert tableObject != null;
+        tableService.populateTable(tableObject);
+        tableObject.solve();
     }
 }

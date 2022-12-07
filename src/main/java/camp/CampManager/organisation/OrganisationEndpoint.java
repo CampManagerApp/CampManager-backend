@@ -81,7 +81,7 @@ public class OrganisationEndpoint {
 
     @PostMapping(path = "/")
     @ResponseBody
-    public ResponseEntity<Organisation> createOrganisation(@RequestBody Organisation organisation) {
+    public ResponseEntity<Organisation> createOrganisation(@RequestBody Organisation organisation) throws Exception {
         organisationService.createOrganisation(organisation);
         Optional<Organisation> opt = organisationService.getOrganisationByName(organisation.getName());
         // This is just an if opt.isPresent return ok else return not found

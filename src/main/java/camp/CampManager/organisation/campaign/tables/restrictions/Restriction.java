@@ -11,6 +11,8 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "restriction_d_type", discriminatorType = DiscriminatorType.INTEGER)
 public abstract class Restriction {
     public RestrictionType restrictionType = RestrictionType.NONE;
     @Id

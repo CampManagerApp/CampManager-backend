@@ -3,10 +3,20 @@ package camp.CampManager.organisation.campaign.tables.restrictions;
 import camp.CampManager.organisation.campaign.counsellors.Counsellor;
 import camp.CampManager.organisation.campaign.tables.CampTable;
 import camp.CampManager.users.Gender;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
+@NoArgsConstructor
+@Getter
+@Setter
+@DiscriminatorValue("5")
 public class SpecialRestriction extends Restriction {
     public static RestrictionType restrictionType = RestrictionType.SPECIAL;
 

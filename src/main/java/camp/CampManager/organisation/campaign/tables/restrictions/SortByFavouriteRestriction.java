@@ -3,13 +3,21 @@ package camp.CampManager.organisation.campaign.tables.restrictions;
 import camp.CampManager.organisation.campaign.counsellors.Counsellor;
 import camp.CampManager.organisation.campaign.tables.CampTable;
 import camp.CampManager.organisation.campaign.tables.Task;
+import lombok.Getter;
+import lombok.Setter;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Entity
+@Getter
+@Setter
+@DiscriminatorValue("4")
 public class SortByFavouriteRestriction extends Restriction {
     public static RestrictionType restrictionType = RestrictionType.SORT_FAVOURITE;
 
