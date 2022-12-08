@@ -27,9 +27,9 @@ public class CounsellorEndpoint {
     @GetMapping("/{orgId}/campaign/{campId}/counsellor/info")
     @ResponseBody
     public ResponseEntity<Counsellor> getCampaignCounsellors(@PathVariable("orgId") Long orgId,
-                                                              @PathVariable("campId") Long campId,
-                                                              @RequestBody Map<String, String> input){
-        return counsellorService.getInfoOfCampaignCounsellor(orgId, campId, input);
+                                                             @PathVariable("campId") Long campId,
+                                                             @RequestParam("name") String name) {
+        return counsellorService.getInfoOfCampaignCounsellor(orgId, campId, name);
     }
 
     @PostMapping("/{orgId}/campaign/{campId}/counsellor")

@@ -27,9 +27,8 @@ public class NameEndpoint {
 
     @GetMapping(path = "/role/")
     @ResponseBody
-    public ResponseEntity<DisplayMembership> getRolesOfNameInOrg(@RequestBody Map<String, String> input) {
-        var fullname = input.get("fullname");
-        var orgname = input.get("orgname");
+    public ResponseEntity<DisplayMembership> getRolesOfNameInOrg(@RequestParam("fullname") String fullname,
+                                                                 @RequestParam("orgname") String orgname) {
         var organisation_o = organisationService.findOrganisationByName(orgname);
         if (organisation_o.isEmpty()) {
             return ResponseEntity.notFound().build();

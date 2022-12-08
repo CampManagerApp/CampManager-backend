@@ -28,11 +28,9 @@ public class CampaignEndpoint {
 
     @GetMapping("/{id}/campaign")
     @ResponseBody
-    public ResponseEntity<DisplayCampaign> findInformationOfCampaignOfOrganisation(@PathVariable("id") Long id, @RequestBody Map<String, String> input) {
-        if (!input.containsKey("campaign_name")) {
-            return ResponseEntity.badRequest().build();
-        }
-        var campaign_opt = campaignService.findCampaignByNameAndOrganisationId(input.get("campaign_name"), id);
+    public ResponseEntity<DisplayCampaign> findInformationOfCampaignOfOrganisation(@PathVariable("id") Long id,
+                                                                                   @RequestParam("campaign_name") String campaign_name) {
+        var campaign_opt = campaignService.findCampaignByNameAndOrganisationId(campaign_name, id);
         if (campaign_opt.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {

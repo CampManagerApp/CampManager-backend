@@ -1,7 +1,5 @@
 package camp.CampManager.organisation.campaign.participants;
 
-import camp.CampManager.organisation.OrganisationService;
-import camp.CampManager.organisation.campaign.CampaignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +28,8 @@ public class ParticipantEndpoint {
     @ResponseBody
     public ResponseEntity<Participant> getCampaignParticipants(@PathVariable("orgId") Long orgId,
                                                                @PathVariable("campId") Long campId,
-                                                               @RequestBody Map<String, String> input){
-        return participantService.getInfoOfCampaignParticipant(orgId, campId, input);
+                                                               @RequestParam("name") String name) {
+        return participantService.getInfoOfCampaignParticipant(orgId, campId, name);
     }
 
     @PostMapping("/{orgId}/campaign/{campId}/participant")

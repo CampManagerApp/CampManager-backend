@@ -28,8 +28,7 @@ public class UserEndpoint {
 
     @GetMapping(path = "/")
     @ResponseBody
-    public ResponseEntity<DisplayUser> findUser(@RequestBody Map<String, String> input) {
-        String username = input.get("username");
+    public ResponseEntity<DisplayUser> findUser(@RequestParam("username") String username) {
         var user_o = userService.findUserByUsername(username);
         return user_o.map(user -> ResponseEntity.ok(displayService.userToDisplay(user))).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -47,9 +46,8 @@ public class UserEndpoint {
 
     @GetMapping(path = "/role/")
     @ResponseBody
-    public ResponseEntity<DisplayMembership> getRolesOfUserInOrg(@RequestBody Map<String, String> input) {
-        var username = input.get("username");
-        var orgname = input.get("orgname");
+    public ResponseEntity<DisplayMembership> getRolesOfUserInOrg(@RequestParam("username") String username,
+                                                                 @RequestParam("orgname") String orgname) {
         var user_o = userService.findUserByUsername(username);
         var organisation_o = organisationService.findOrganisationByName(orgname);
         if (user_o.isEmpty() || organisation_o.isEmpty()) {
@@ -146,8 +144,7 @@ public class UserEndpoint {
 
     @GetMapping(path = "/memberships/")
     @ResponseBody
-    public ResponseEntity<List<DisplayMembership>> getAllUserMemberships(@RequestBody Map<String, String> input) {
-        var username = input.get("username");
+    public ResponseEntity<List<DisplayMembership>> getAllUserMemberships(@RequestParam("username") String username) {
         var user_o = userService.findUserByUsername(username);
         if (user_o.isPresent()) {
             var membs = userService.findUserMemberships(user_o.get());

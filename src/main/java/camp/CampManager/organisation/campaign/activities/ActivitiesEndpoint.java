@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -33,9 +32,9 @@ public class ActivitiesEndpoint {
     @GetMapping("/{orgId}/campaign/{campId}/activities/info")
     @ResponseBody
     public ResponseEntity<Activity> getOneActivityOfACampaign(@PathVariable("orgId") Long orgId,
-                                                                      @PathVariable("campId") Long campId,
-                                                                      @RequestBody Map<String, String> input){
-        return activitiesService.findActivityOfCampaign(orgId, campId, input);
+                                                              @PathVariable("campId") Long campId,
+                                                              @RequestParam("name") String name) {
+        return activitiesService.findActivityOfCampaign(orgId, campId, name);
     }
 
     @PostMapping("/{orgId}/campaign/{campId}/activities")

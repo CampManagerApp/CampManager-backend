@@ -136,16 +136,10 @@ public class CounsellorService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Counsellor> getInfoOfCampaignCounsellor(Long orgId, Long campId, Map<String, String> input) {
+    public ResponseEntity<Counsellor> getInfoOfCampaignCounsellor(Long orgId, Long campId, String name) {
         var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
         if (camp_o.isEmpty()) {
             return ResponseEntity.notFound().build();
-        }
-        String name;
-        if (input.containsKey("fullName")) {
-            name = input.get("fullName");
-        } else {
-            return ResponseEntity.badRequest().build();
         }
         var campaign = camp_o.get();
         for (Long part_id : campaign.getCounsellor_ids()) {

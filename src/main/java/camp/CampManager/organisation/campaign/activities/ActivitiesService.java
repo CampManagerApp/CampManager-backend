@@ -183,18 +183,15 @@ public class ActivitiesService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Activity> findActivityOfCampaign(Long orgId, Long campId, Map<String, String> input) {
+    public ResponseEntity<Activity> findActivityOfCampaign(Long orgId, Long campId, String name) {
         var org_o = organisationRepository.findById(orgId);
         var camp_o = campaignRepository.findById(campId);
         if (org_o.isEmpty() || camp_o.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         var camp = camp_o.get();
-        if (!input.containsKey("name")) {
-            return ResponseEntity.badRequest().build();
-        }
         var activity = activitiesRepository.findByCampaignIdEqualsAndActivityNameEquals(
-                camp.getId(), input.get("name"));
+                camp.getId(), name);
         return activity.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
