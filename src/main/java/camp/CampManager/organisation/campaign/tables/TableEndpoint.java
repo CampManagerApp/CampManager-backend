@@ -111,11 +111,8 @@ public class TableEndpoint {
     @ResponseBody
     public ResponseEntity<CampTable> getTableOfCampaign(@PathVariable("orgId") Long orgId,
                                                         @PathVariable("campId") Long campId,
-                                                        @RequestBody Map<String, String> input) {
-        if (!input.containsKey("tableName")) {
-            return ResponseEntity.badRequest().build();
-        }
-        return tableService.getTableByName(orgId, campId, input.get("tableName"));
+                                                        @RequestParam("tableName") String tableName) {
+        return tableService.getTableByName(orgId, campId, tableName);
     }
 
     @PutMapping("/{orgId}/campaign/{campId}/tables")
