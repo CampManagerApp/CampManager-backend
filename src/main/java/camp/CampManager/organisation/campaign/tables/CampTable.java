@@ -34,6 +34,7 @@ public class CampTable {
     @Transient
     private List<Task> tasks;
     @Convert(converter = MapStringConverter.class)
+    @Column(columnDefinition = "text")
     private Map<String, Set<String>> grid;
     @Convert(converter = StringListConverter.class)
     private List<Long> counsellor_ids;
@@ -80,6 +81,7 @@ public class CampTable {
                 return false;
             }
         }
+        System.out.println(next_slot);
         for (Set<Counsellor> assignment : possible_assignments) {
             CampTable copy = this.copy();
             Set<String> assignmentOfStrings = new HashSet<>();
