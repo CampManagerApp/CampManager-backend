@@ -81,11 +81,6 @@ public class TableService {
         return table_o.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    public ResponseEntity<CampTable> updateTableByName(Long orgId, Long campId, String tableName) {
-        // TODO
-        return null;
-    }
-
     public ResponseEntity<String> deleteTableByName(Long orgId, Long campId, String tableName) {
         var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
         if (camp_o.isEmpty()) {
@@ -177,5 +172,27 @@ public class TableService {
             }
         }
         return counsellorList;
+    }
+
+    public ResponseEntity<CampTable> updateTable(CampTable table) {
+        List<Long> tIds = new LinkedList<>();
+        for (Task t : table.getTasks()) {
+            taskRepository.save(t);
+            tIds.add(t.getId());
+        }
+        table.setTask_ids(tIds);
+        List<Long> rIds = new LinkedList<>();
+        for (Restriction r : table.getRestrictions()) {
+            restrictionRepository.save(r);
+            rIds.add(r.getId());
+        }
+        table.setRestrictions_ids(rIds);
+        List<Long> cIds = new LinkedList<>();
+        for (Counsellor c : table.getCounsellors()) {
+            cIds.add(c.getId());
+        }
+        table.setCounsellor_ids(cIds);
+        tableRepository.save(table);
+        return ResponseEntity.ok(table);
     }
 }

@@ -126,7 +126,55 @@ public class TableEndpoint {
         if (!input.containsKey("tableName")) {
             return ResponseEntity.badRequest().build();
         }
-        return tableService.updateTableByName(orgId, campId, input.get("tableName"));
+        var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
+        if (camp_o.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var tableResponse = tableService.getTableByName(orgId, campId, input.get("tableName"));
+        if (tableResponse.getStatusCode() != HttpStatus.OK || tableResponse.getBody() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        CampTable table = tableResponse.getBody();
+        table.setStatus("DEPRECATED");
+        if (input.containsKey("days")) {
+            table.setDays(List.of(input.get("days").split(";")));
+        }
+        // Tasks as name,min,max;
+        if (input.containsKey("tasks")) {
+            try {
+                List<Task> tasks = new LinkedList<>();
+                for (String taskInString : input.get("tasks").split(";")) {
+                    String taskName = taskInString.split(",")[0];
+                    int minCounsellors = Integer.parseInt(taskInString.split(",")[1]);
+                    int maxCounsellors = Integer.parseInt(taskInString.split(",")[2]);
+                    Task task = new Task(taskName, minCounsellors, maxCounsellors);
+                    tasks.add(task);
+                }
+                table.setTasks(tasks);
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().build();
+            }
+        }
+        // Restrictions as list of type,par1,par2[,par3];...
+        if (input.containsKey("restrictions")) {
+            var restrictions = tableService.parseRestrictions(input.get("restrictions"));
+            if (restrictions == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            restrictions.add(new SortByFavouriteRestriction());
+            table.setRestrictions(restrictions);
+        }
+        if (input.containsKey("counsellors")) {
+            var counsellors = tableService.parseCounsellors(input.get("counsellors"), camp_o.get());
+            if (counsellors == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            table.setCounsellors(counsellors);
+        } else {
+            // TODO fer que agafi tots els de la campaign
+            table.setCounsellors(new LinkedList<>());
+        }
+        return tableService.updateTable(table);
     }
 
     @DeleteMapping("/{orgId}/campaign/{campId}/tables")
