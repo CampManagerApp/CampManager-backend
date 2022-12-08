@@ -10,6 +10,9 @@ public class MapStringConverter implements AttributeConverter<Map<String, Set<St
     @Override
     public String convertToDatabaseColumn(Map<String, Set<String>> setMap) {
         StringBuilder column = new StringBuilder();
+        if (setMap == null) {
+            return "";
+        }
         for (String key : setMap.keySet()) {
             StringBuilder row = new StringBuilder(key + "|");
             for (String element : setMap.get(key)) {
@@ -31,9 +34,11 @@ public class MapStringConverter implements AttributeConverter<Map<String, Set<St
     public Map<String, Set<String>> convertToEntityAttribute(String s) {
         Map<String, Set<String>> returnValue = new HashMap<>();
         for (String row : s.split(";")) {
-            String key = row.split("\\|")[0];
-            String values = row.split("\\|")[1];
-            returnValue.put(key, new HashSet<>(Arrays.asList(values.split(","))));
+            if (row.contains("|")) {
+                String key = row.split("\\|")[0];
+                String values = row.split("\\|")[1];
+                returnValue.put(key, new HashSet<>(Arrays.asList(values.split(","))));
+            }
         }
         return returnValue;
     }

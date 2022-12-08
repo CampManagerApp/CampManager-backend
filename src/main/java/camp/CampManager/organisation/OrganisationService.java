@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.NoSuchAlgorithmException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +34,12 @@ public class OrganisationService {
         organisationRepository.deleteById(id);
     }
 
-    public void createOrganisation(Organisation organisation) {
+    public void createOrganisation(Organisation organisation) throws Exception {
+        organisation.setCampaign_ids(new LinkedList<>());
+        Optional<Organisation> doesItExist = organisationRepository.findByName(organisation.getName());
+        if (doesItExist.isPresent()) {
+            throw new Exception();
+        }
         organisationRepository.save(organisation);
     }
 

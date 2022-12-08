@@ -44,10 +44,6 @@ public class CampManagerApplication {
         return storageProvider;
     }
 
-    BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     @Bean
     CommandLineRunner initializeData(OrganisationService organisationService,
                                      NameService nameService,
@@ -62,28 +58,28 @@ public class CampManagerApplication {
                     .username("joelaumedes")
                     .full_name("Joel Aumedes")
                     .password("joel")
-                    .role("USER")
+                    .role("ADMIN")
                     .build();
             CampUser mireia = CampUser.builder()
                     .email("mireia@joel.com")
                     .username("mireiacalvet")
                     .full_name("Mireia Calvet")
                     .password("mireia")
-                    .role("USER")
+                    .role("ADMIN")
                     .build();
             CampUser mariona = CampUser.builder()
                     .email("mariona@joel.com")
                     .username("marionavillaro")
                     .full_name("Mariona Villaró")
                     .password("mariona")
-                    .role("USER")
+                    .role("ADMIN")
                     .build();
             CampUser robert = CampUser.builder()
                     .email("robert@joel.com")
                     .username("robertcreus")
                     .full_name("Robert Creus")
                     .password("robert")
-                    .role("USER")
+                    .role("ADMIN")
                     .build();
 
             userService.saveUser(joel);

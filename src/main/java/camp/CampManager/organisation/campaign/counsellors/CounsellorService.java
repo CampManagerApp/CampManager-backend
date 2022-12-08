@@ -28,6 +28,10 @@ public class CounsellorService {
 
     private final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
+    public CounsellorRepository getRepository() {
+        return counsellorRepository;
+    }
+
     public ResponseEntity<List<Counsellor>> getAllCounsellorsOfCampaign(Long orgId, Long campId) {
         var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
         if (camp_o.isEmpty()) {
@@ -70,6 +74,8 @@ public class CounsellorService {
         }
         if (input.containsKey("is_first_year")) {
             counsellor_builder.is_first_year(Boolean.parseBoolean(input.get("is_first_year")));
+        } else {
+            counsellor_builder.is_first_year(false);
         }
         if (input.containsKey("emergencyPhone")) {
             counsellor_builder.emergencyPhone(Integer.parseInt(input.get("emergencyPhone")));
