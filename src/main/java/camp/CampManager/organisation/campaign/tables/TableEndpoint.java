@@ -23,6 +23,9 @@ public class TableEndpoint {
     @Autowired
     private JobScheduler scheduler;
     @Autowired
+    private TableSolvingService tableSolvingService;
+
+    @Autowired
     private TableService tableService;
     @Autowired
     private TableRepository tableRepository;
@@ -150,13 +153,9 @@ public class TableEndpoint {
             return ResponseEntity.badRequest().build();
         }
         CampTable tableObject = table.getBody();
-        solveTable(tableObject);
+        System.out.println("ENQUEUEING JOB");
+        scheduler.enqueue(() -> tableSolvingService.solveTable(tableObject, tableObject.getTableName()));
+        System.out.println("JOB ENQUEUED");
         return ResponseEntity.ok().build();
-    }
-
-    public void solveTable(CampTable table) {
-        tableService.populateTable(table);
-        table.solve(tableRepository);
-        tableRepository.save(table);
     }
 }

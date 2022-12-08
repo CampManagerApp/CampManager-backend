@@ -58,9 +58,7 @@ public class CampTable {
         return copy;
     }
 
-    public void solve(TableRepository tableRepository) {
-        this.status = "PROCESSING";
-        tableRepository.save(this);
+    public void solve() {
         if (this._solve()) {
             this.status = "SOLVED";
         } else {
