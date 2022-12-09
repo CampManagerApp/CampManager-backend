@@ -167,9 +167,6 @@ public class TableEndpoint {
                 return ResponseEntity.badRequest().build();
             }
             table.setCounsellors(counsellors);
-        } else {
-            // TODO fer que agafi tots els de la campaign
-            table.setCounsellors(new LinkedList<>());
         }
         return tableService.updateTable(table);
     }
