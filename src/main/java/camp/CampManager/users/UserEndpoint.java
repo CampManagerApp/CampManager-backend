@@ -8,11 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -157,20 +154,5 @@ public class UserEndpoint {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    @GetMapping("/export")
-    @ResponseBody
-    public ResponseEntity<String> exportTable(HttpServletResponse response) throws IOException {
-
-        var myWriter = response.getWriter();
-
-        myWriter.write("Yo Mr White he exportat un fitxer BITCH!\n");
-
-        response.setContentType("text/plain");
-        String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename=table_" + new Date().getTime() + ".txt";
-        response.setHeader(headerKey, headerValue);
-        return ResponseEntity.ok().build();
     }
 }

@@ -12,7 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -206,5 +209,32 @@ public class TableEndpoint {
         scheduler.enqueue(() -> tableSolvingService.solveTable(tableObject, tableObject.getTableName()));
         System.out.println("JOB ENQUEUED");
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{orgId}/campaign/{campId}/tables/solve")
+    @ResponseBody
+    public ResponseEntity<String> exportTable(@PathVariable("orgId") Long orgId,
+                                              @PathVariable("campId") Long campId,
+                                              @RequestParam("tableName") String tableName,
+                                              HttpServletResponse response) throws IOException {
+        var table = tableService.getTableByName(orgId, campId, tableName);
+        if (table.getStatusCode() != HttpStatus.OK || table.getBody() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        CampTable tableObject = table.getBody();
+
+        var myWriter = response.getWriter();
+
+        myWriter.write("Yo Mr White he exportat un fitxer BITCH!\n");
+
+        response.setContentType("text/plain");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=table_" + new Date().getTime() + ".txt";
+        response.setHeader(headerKey, headerValue);
+        return ResponseEntity.ok().build();
+    }
+
+    public String fix(String st) {
+        return String.format("%-15s", st);
     }
 }
