@@ -1,6 +1,7 @@
 package camp.CampManager.organisation.campaign.tables;
 
 import camp.CampManager.organisation.campaign.CampaignRepository;
+import camp.CampManager.organisation.campaign.counsellors.Counsellor;
 import camp.CampManager.organisation.campaign.counsellors.CounsellorRepository;
 import camp.CampManager.organisation.campaign.tables.restrictions.NoFirstYearOnlyRestriction;
 import camp.CampManager.organisation.campaign.tables.restrictions.RestrictionRepository;
@@ -103,8 +104,11 @@ public class TableEndpoint {
             }
             buildingTable.counsellors(counsellors);
         } else {
-            // TODO afegir tots
-            buildingTable.counsellors(new LinkedList<>());
+            var counsellorIds = camp_o.get().getCounsellor_ids();
+            var counsellors = counsellorRepository.findAllById(counsellorIds);
+            List<Counsellor> listCounsellor = new LinkedList<>();
+            counsellors.forEach(listCounsellor::add);
+            buildingTable.counsellors(listCounsellor);
         }
         return tableService.createNewTableInCampaign(orgId, campId, buildingTable.build());
     }
