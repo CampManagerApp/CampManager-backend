@@ -2,6 +2,7 @@ package camp.CampManager.organisation.campaign.tables;
 
 import camp.CampManager.organisation.campaign.CampaignRepository;
 import camp.CampManager.organisation.campaign.counsellors.CounsellorRepository;
+import camp.CampManager.organisation.campaign.tables.restrictions.NoFirstYearOnlyRestriction;
 import camp.CampManager.organisation.campaign.tables.restrictions.RestrictionRepository;
 import camp.CampManager.organisation.campaign.tables.restrictions.SortByFavouriteRestriction;
 import org.jobrunr.scheduling.JobScheduler;
@@ -89,6 +90,7 @@ public class TableEndpoint {
             if (restrictions == null) {
                 return ResponseEntity.badRequest().build();
             }
+            restrictions.add(new NoFirstYearOnlyRestriction());
             restrictions.add(new SortByFavouriteRestriction());
             buildingTable.restrictions(restrictions);
         } else {
@@ -101,7 +103,7 @@ public class TableEndpoint {
             }
             buildingTable.counsellors(counsellors);
         } else {
-            // TODO fer que agafi tots els de la campaign
+            // TODO afegir tots
             buildingTable.counsellors(new LinkedList<>());
         }
         return tableService.createNewTableInCampaign(orgId, campId, buildingTable.build());
@@ -158,6 +160,7 @@ public class TableEndpoint {
             if (restrictions == null) {
                 return ResponseEntity.badRequest().build();
             }
+            restrictions.add(new NoFirstYearOnlyRestriction());
             restrictions.add(new SortByFavouriteRestriction());
             table.setRestrictions(restrictions);
         }
