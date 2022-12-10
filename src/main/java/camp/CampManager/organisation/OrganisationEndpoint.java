@@ -63,13 +63,20 @@ public class OrganisationEndpoint {
     public ResponseEntity<Organisation> getOrganisationByCode(@RequestParam("code") String code) {
         for (Organisation org : organisationService.getAllOrganisations()) {
             try {
-                if (code.equals(hashCreator.createMD5Hash(org.getId().toString()))){
+                if (code.equals(hashCreator.createMD5Hash(org.getId().toString()))) {
                     return ResponseEntity.ok(org);
                 }
             } catch (NoSuchAlgorithmException ignored) {
             }
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(path = "/name")
+    @ResponseBody
+    public ResponseEntity<Organisation> getOrganisationByName(@RequestParam("name") String name) {
+        var org = organisationService.findOrganisationByName(name);
+        return org.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping(path = "/{id}")
