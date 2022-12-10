@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -40,43 +41,45 @@ public class CampaignEndpoint {
 
     @PostMapping("/{id}/campaign")
     @ResponseBody
-    public ResponseEntity<Campaign> createCampaignOfOrganisation(@PathVariable("id") Long id, @RequestBody Map<String, String> input) throws URISyntaxException {
+    public ResponseEntity<Campaign> createCampaignOfOrganisation(@PathVariable("id") Long id,
+                                                                 @RequestBody Map<String, String> input,
+                                                                 HttpServletResponse response) throws URISyntaxException {
         var campaign_builder = Campaign.builder();
         campaign_builder.organisationId(id);
         if (input.containsKey("campaign_name")) {
             campaign_builder.campaignName(input.get("campaign_name"));
         } else {
+            response.setHeader("error", "Campaign Name Missing. Key: 'campaign_name'");
             return ResponseEntity.badRequest().build();
-            //return ResponseEntity.badRequest().body("Campaign Name Missing. Key: 'campaign_name'");
         }
         if (input.containsKey("start")) {
             try {
                 campaign_builder.startDate(formatter.parse(input.get("start")));
             } catch (ParseException e) {
+                response.setHeader("error", "Wrong format start date. Correct format is dd-MM-yyyy hh:mm:ss");
                 return ResponseEntity.badRequest().build();
-                //return ResponseEntity.badRequest().body("Wrong format start date. Correct format is dd-MM-yyyy hh:mm:ss");
             }
         } else {
+            response.setHeader("error", "Start Date Missing. Key: 'start'");
             return ResponseEntity.badRequest().build();
-            //return ResponseEntity.badRequest().body("Start Date Missing. Key: 'start'");
         }
         if (input.containsKey("end")) {
             try {
                 campaign_builder.endDate(formatter.parse(input.get("end")));
             } catch (ParseException e) {
+                response.setHeader("error", "Wrong format end date. Correct format is dd-MM-yyyy hh:mm:ss");
                 return ResponseEntity.badRequest().build();
-                //return ResponseEntity.badRequest().body("Wrong format end date. Correct format is dd-MM-yyyy hh:mm:ss");
             }
         } else {
+            response.setHeader("error", "End Date Missing. Key: 'end'");
             return ResponseEntity.badRequest().build();
-            //return ResponseEntity.badRequest().body("End Date Missing. Key: 'end'");
         }
         Campaign campaign = campaign_builder.build();
         if (campaignService.saveCampaign(campaign)) {
             return ResponseEntity.created(new URI("/organisation/" + id + "/campaign/")).body(campaign);
         } else {
+            response.setHeader("error", "Campaign Name Duplicated");
             return ResponseEntity.badRequest().build();
-            //return ResponseEntity.badRequest().body("Campaign Name Duplicated");
         }
     }
 
