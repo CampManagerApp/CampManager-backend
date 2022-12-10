@@ -11,8 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.supercsv.io.CsvBeanWriter;
+import org.supercsv.io.ICsvBeanWriter;
+import org.supercsv.prefs.CsvPreference;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -205,6 +211,37 @@ public class TableEndpoint {
         System.out.println("ENQUEUEING JOB");
         scheduler.enqueue(() -> tableSolvingService.solveTable(tableObject, tableObject.getTableName()));
         System.out.println("JOB ENQUEUED");
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{orgId}/campaign/{campId}/tables/export")
+    @ResponseBody
+    public ResponseEntity<String> exportTable(@PathVariable("orgId") Long orgId,
+                                              @PathVariable("campId") Long campId,
+                                              @RequestParam("tableName") String tableName,
+                                              HttpServletResponse response) throws IOException {
+        var table = tableService.getTableByName(orgId, campId, tableName);
+        if (table.getStatusCode() != HttpStatus.OK || table.getBody() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        CampTable tableObject = table.getBody();
+        ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
+        String[] csvHeader = new String[tableObject.getDays().size() + 1];
+        csvHeader[0] = "";
+        for (int i = 0; i < tableObject.getDays().size(); i++) {
+            csvHeader[1 + i] = tableObject.getDays().get(i);
+        }
+
+        csvWriter.writeHeader(csvHeader);
+
+        csvWriter.write(tableObject);
+
+        csvWriter.close();
+
+        response.setContentType("text/csv");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=table_" + new Date().getTime() + ".csv";
+        response.setHeader(headerKey, headerValue);
         return ResponseEntity.ok().build();
     }
 }
