@@ -40,36 +40,43 @@ public class CampaignEndpoint {
 
     @PostMapping("/{id}/campaign")
     @ResponseBody
-    public ResponseEntity<String> createCampaignOfOrganisation(@PathVariable("id") Long id, @RequestBody Map<String, String> input) throws URISyntaxException {
+    public ResponseEntity<Campaign> createCampaignOfOrganisation(@PathVariable("id") Long id, @RequestBody Map<String, String> input) throws URISyntaxException {
         var campaign_builder = Campaign.builder();
         campaign_builder.organisationId(id);
         if (input.containsKey("campaign_name")) {
             campaign_builder.campaignName(input.get("campaign_name"));
         } else {
-            return ResponseEntity.badRequest().body("Campaign Name Missing. Key: 'campaign_name'");
+            return ResponseEntity.badRequest().build();
+            //return ResponseEntity.badRequest().body("Campaign Name Missing. Key: 'campaign_name'");
         }
         if (input.containsKey("start")) {
             try {
                 campaign_builder.startDate(formatter.parse(input.get("start")));
             } catch (ParseException e) {
-                return ResponseEntity.badRequest().body("Wrong format start date. Correct format is dd-MM-yyyy hh:mm:ss");
+                return ResponseEntity.badRequest().build();
+                //return ResponseEntity.badRequest().body("Wrong format start date. Correct format is dd-MM-yyyy hh:mm:ss");
             }
         } else {
-            return ResponseEntity.badRequest().body("Start Date Missing. Key: 'start'");
+            return ResponseEntity.badRequest().build();
+            //return ResponseEntity.badRequest().body("Start Date Missing. Key: 'start'");
         }
         if (input.containsKey("end")) {
             try {
                 campaign_builder.endDate(formatter.parse(input.get("end")));
             } catch (ParseException e) {
-                return ResponseEntity.badRequest().body("Wrong format end date. Correct format is dd-MM-yyyy hh:mm:ss");
+                return ResponseEntity.badRequest().build();
+                //return ResponseEntity.badRequest().body("Wrong format end date. Correct format is dd-MM-yyyy hh:mm:ss");
             }
         } else {
-            return ResponseEntity.badRequest().body("End Date Missing. Key: 'end'");
+            return ResponseEntity.badRequest().build();
+            //return ResponseEntity.badRequest().body("End Date Missing. Key: 'end'");
         }
-        if (campaignService.saveCampaign(campaign_builder.build())) {
-            return ResponseEntity.created(new URI("/organisation/" + id + "/campaign/")).build();
+        Campaign campaign = campaign_builder.build();
+        if (campaignService.saveCampaign(campaign)) {
+            return ResponseEntity.created(new URI("/organisation/" + id + "/campaign/")).body(campaign);
         } else {
-            return ResponseEntity.badRequest().body("Campaign Name Duplicated");
+            return ResponseEntity.badRequest().build();
+            //return ResponseEntity.badRequest().body("Campaign Name Duplicated");
         }
     }
 
