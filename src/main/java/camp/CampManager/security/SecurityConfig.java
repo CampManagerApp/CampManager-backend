@@ -59,12 +59,6 @@ public class SecurityConfig {
                 .sessionCreationPolicy(STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/login/**").permitAll()
-                .antMatchers("/users/**").permitAll()
-                .antMatchers("/names/**").permitAll()
-                .antMatchers("/organisation/**").hasAuthority("ADMIN")
-                .and()
-                .authorizeRequests()
                 .anyRequest()
                 .authenticated();
 
@@ -97,7 +91,7 @@ public class SecurityConfig {
         return args -> {
             PasswordEncoder bCrypt = passwordEncoder();
             CampUser admin = CampUser.builder().email("admin@admin.com").username("admin")
-                    .password(passwordEncoder().encode("admin")).role("ADMIN").build();
+                    .password(passwordEncoder().encode("admin")).role("SUPERADMIN").build();
             CampUser campUser1 = CampUser.builder().email("jim@dundermifflin.com").username("user1")
                     .password(passwordEncoder().encode("user1")).role("USER").build();
             CampUser campUser2 = CampUser.builder().email("dwight@dundermifflin.com").username("user2")
