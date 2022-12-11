@@ -12,10 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -206,5 +206,53 @@ public class TableEndpoint {
         scheduler.enqueue(() -> tableSolvingService.solveTable(tableObject, tableObject.getTableName()));
         System.out.println("JOB ENQUEUED");
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{orgId}/campaign/{campId}/tables/export")
+    @ResponseBody
+    public ResponseEntity<String> exportTable(@PathVariable("orgId") Long orgId,
+                                              @PathVariable("campId") Long campId,
+                                              @RequestParam("tableName") String tableName,
+                                              HttpServletResponse response) throws IOException {
+        var table = tableService.getTableByName(orgId, campId, tableName);
+        if (table.getStatusCode() != HttpStatus.OK || table.getBody() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        CampTable tableObject = table.getBody();
+        tableService.populateTable(tableObject);
+
+        var myWriter = response.getWriter();
+
+        myWriter.write(fix(""));
+        for (String day : tableObject.getDays()) {
+            myWriter.write("," + day);
+        }
+
+        myWriter.write("\n");
+        for (Task task : tableObject.getTasks()) {
+            for (int i = 0; i < task.maxPlaces; i++) {
+                myWriter.write(task.name);
+                for (String day : tableObject.getDays()) {
+                    Set<String> counsellors = tableObject.getGrid().get(day + ":" + task.name);
+                    if (counsellors == null || i >= counsellors.size()) {
+                        myWriter.write(",");
+                    } else {
+                        myWriter.write(",");
+                        myWriter.write(counsellors.toArray()[i].toString());
+                    }
+                }
+                myWriter.write("\n");
+            }
+        }
+
+        response.setContentType("text/csv");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=" + tableObject.getTableName() + "_" + new Date().getTime() + ".csv";
+        response.setHeader(headerKey, headerValue);
+        return ResponseEntity.ok().build();
+    }
+
+    public String fix(String st) {
+        return String.format("%-15s", st);
     }
 }
