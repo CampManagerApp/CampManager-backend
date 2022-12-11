@@ -92,12 +92,8 @@ public class SecurityConfig {
             PasswordEncoder bCrypt = passwordEncoder();
             CampUser admin = CampUser.builder().email("admin@admin.com").username("admin")
                     .password(passwordEncoder().encode("admin")).role("SUPERADMIN").build();
-            CampUser campUser1 = CampUser.builder().email("jim@dundermifflin.com").username("user1")
-                    .password(passwordEncoder().encode("user1")).role("USER").build();
-            CampUser campUser2 = CampUser.builder().email("dwight@dundermifflin.com").username("user2")
-                    .password(passwordEncoder().encode("user2")).role("USER").build();
 
-            userRepository.saveAll(List.of(admin, campUser1, campUser2));
+            userRepository.saveAll(List.of(admin));
         };
     }
 }

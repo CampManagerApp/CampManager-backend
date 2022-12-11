@@ -6,6 +6,7 @@ import camp.CampManager.organisation.OrganisationService;
 import camp.CampManager.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -39,6 +40,7 @@ public class NameEndpoint {
     }
 
     @PutMapping(path = "/role/")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#input.get(\"orgname\") + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<String> updateMembershipToName(@RequestBody Map<String, String> input) {
         var fullname = input.get("fullname");
@@ -63,6 +65,7 @@ public class NameEndpoint {
     }
 
     @PostMapping(path = "/role/")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#input.get(\"orgname\") + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<String> createMembershipOfName(@RequestBody Map<String, String> input) throws URISyntaxException {
         var fullname = input.get("fullname");
@@ -84,6 +87,7 @@ public class NameEndpoint {
     }
 
     @DeleteMapping(path = "/role/")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#input.get(\"orgname\") + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<String> deleteMembershipOfName(@RequestBody Map<String, String> input) {
         var fullname = input.get("fullname");

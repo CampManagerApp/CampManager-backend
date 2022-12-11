@@ -1,5 +1,6 @@
 package camp.CampManager.security;
 
+import camp.CampManager.organisation.OrganisationRepository;
 import camp.CampManager.users.CampUser;
 import camp.CampManager.users.Membership;
 import camp.CampManager.users.MembershipRepository;
@@ -21,6 +22,8 @@ public class UsersDetailsService implements UserDetailsService {
     UserRepository userRepository;
     @Autowired
     MembershipRepository membershipRepository;
+    @Autowired
+    OrganisationRepository organisationRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -31,8 +34,15 @@ public class UsersDetailsService implements UserDetailsService {
             // TODO Obtenir totes les authorities necessaries
             Collection<SimpleGrantedAuthority> authorities = new LinkedList<>();
             for (Membership membership : memberships) {
-                authorities.add(new SimpleGrantedAuthority(membership.getOrganisationId().toString() + "TEST"));
+                if (membership.is_admin) {
+                    authorities.add(new SimpleGrantedAuthority(membership.getOrganisationId().toString() + "ADMIN"));
+                    authorities.add(new SimpleGrantedAuthority(organisationRepository.findById(membership.getOrganisationId()).get().getName() + "ADMIN"));
+                }
+                if (membership.is_member) {
+                    authorities.add(new SimpleGrantedAuthority(membership.getOrganisationId().toString() + "USER"));
+                }
             }
+            authorities.add(new SimpleGrantedAuthority(user.getRole()));
             System.out.println("AUTHORITIES: " + authorities);
             return org.springframework.security.core.userdetails.User
                     .builder()

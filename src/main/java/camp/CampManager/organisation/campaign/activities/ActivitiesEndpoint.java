@@ -2,6 +2,7 @@ package camp.CampManager.organisation.campaign.activities;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URISyntaxException;
@@ -17,12 +18,14 @@ public class ActivitiesEndpoint {
     private ActivitiesService activitiesService;
 
     @GetMapping("/{orgId}/activities/")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN') or hasAuthority(#orgId.toString() + 'USER')")
     @ResponseBody
     public ResponseEntity<List<Activity>> getAllActivitiesOfOrganisation(@PathVariable("orgId") Long orgId){
         return activitiesService.findAllOfOrganisation(orgId);
     }
 
     @GetMapping("/{orgId}/campaign/{campId}/activities")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN') or hasAuthority(#orgId.toString() + 'USER')")
     @ResponseBody
     public ResponseEntity<List<Activity>> getAllActivitiesInACampaign(@PathVariable("orgId") Long orgId,
                                                                       @PathVariable("campId") Long campId){
@@ -30,6 +33,7 @@ public class ActivitiesEndpoint {
     }
 
     @GetMapping("/{orgId}/campaign/{campId}/activities/info")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN') or hasAuthority(#orgId.toString() + 'USER')")
     @ResponseBody
     public ResponseEntity<Activity> getOneActivityOfACampaign(@PathVariable("orgId") Long orgId,
                                                               @PathVariable("campId") Long campId,
@@ -38,6 +42,7 @@ public class ActivitiesEndpoint {
     }
 
     @PostMapping("/{orgId}/campaign/{campId}/activities")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<String> createNewActivityInACampaign(@PathVariable("orgId") Long orgId,
                                                                @PathVariable("campId") Long campId,
@@ -46,6 +51,7 @@ public class ActivitiesEndpoint {
     }
 
     @PutMapping("/{orgId}/campaign/{campId}/activities")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<String> modifyActivityInACampaign(@PathVariable("orgId") Long orgId,
                                                                     @PathVariable("campId") Long campId,
@@ -54,6 +60,7 @@ public class ActivitiesEndpoint {
     }
 
     @DeleteMapping("/{orgId}/campaign/{campId}/activities")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<String> deleteActivityInACampaign(@PathVariable("orgId") Long orgId,
                                                             @PathVariable("campId") Long campId,

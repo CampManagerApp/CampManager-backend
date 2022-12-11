@@ -4,6 +4,7 @@ import camp.CampManager.display.DisplayCampaign;
 import camp.CampManager.display.DisplayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -27,6 +28,7 @@ public class CampaignEndpoint {
     private DisplayService displayService;
 
     @GetMapping("/{id}/campaign")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#id.toString() + 'ADMIN') or hasAuthority(#id.toString() + 'USER')")
     @ResponseBody
     public ResponseEntity<DisplayCampaign> findInformationOfCampaignOfOrganisation(@PathVariable("id") Long id,
                                                                                    @RequestParam("campaign_name") String campaign_name) {
@@ -39,6 +41,7 @@ public class CampaignEndpoint {
     }
 
     @PostMapping("/{id}/campaign")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#id.toString() + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<String> createCampaignOfOrganisation(@PathVariable("id") Long id, @RequestBody Map<String, String> input) throws URISyntaxException {
         var campaign_builder = Campaign.builder();
@@ -74,6 +77,7 @@ public class CampaignEndpoint {
     }
 
     @PutMapping("/{id}/campaign")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#id.toString() + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<String> modifyCampaignOfOrganisation(@PathVariable("id") Long id, @RequestBody Map<String, String> input) {
         Campaign campaign;
@@ -111,6 +115,7 @@ public class CampaignEndpoint {
     }
 
     @DeleteMapping("/{id}/campaign")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#id.toString() + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<String> deleteCampaignOfOrganisation(@PathVariable("id") Long id, @RequestBody Map<String, String> input) {
         if (input.containsKey("campaign_name")) {
@@ -126,6 +131,7 @@ public class CampaignEndpoint {
     }
 
     @GetMapping("/{id}/campaign/all")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#id.toString() + 'ADMIN') or hasAuthority(#id.toString() + 'USER')")
     @ResponseBody
     public ResponseEntity<List<DisplayCampaign>> getAllCampaignOfOrganisation(@PathVariable("id") Long id) {
         List<DisplayCampaign> displays = new LinkedList<>();
