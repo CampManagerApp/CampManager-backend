@@ -1,6 +1,10 @@
 package camp.CampManager.organisation;
 
+import camp.CampManager.organisation.campaign.CampaignService;
+import camp.CampManager.organisation.campaign.counsellors.CounsellorRepository;
 import camp.CampManager.security.HashCreator;
+import camp.CampManager.users.Membership;
+import camp.CampManager.users.MembershipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +20,14 @@ public class OrganisationService {
     @Autowired
     private OrganisationRepository organisationRepository;
     @Autowired
+    private CampaignService campaignService;
+
+    @Autowired
     private HashCreator hashCreator;
+    @Autowired
+    private CounsellorRepository counsellorRepository;
+    @Autowired
+    private MembershipRepository membershipRepository;
 
     public List<Organisation> getAllOrganisations() {
         return (List<Organisation>) organisationRepository.findAll();
@@ -30,8 +41,18 @@ public class OrganisationService {
         return organisationRepository.findByName(name);
     }
 
-    public void deleteOrganisationById(Long id) {
-        organisationRepository.deleteById(id);
+    public void deleteOrganisation(Organisation organisation) {
+        for (Long campaignId : organisation.getCampaign_ids()) {
+            var campaign_o = campaignService.findCampaignByIdAndOrganisationId(campaignId, organisation.getId());
+            if (campaign_o.isEmpty()) {
+                continue;
+            }
+            campaignService.deleteCampaign(campaign_o.get());
+        }
+        for (Membership membership : membershipRepository.findByOrganisationIdEquals(organisation.getId())) {
+            membershipRepository.deleteById(membership.getId());
+        }
+        organisationRepository.deleteById(organisation.getId());
     }
 
     public void createOrganisation(Organisation organisation) throws Exception {

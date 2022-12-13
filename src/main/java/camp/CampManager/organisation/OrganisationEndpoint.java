@@ -86,7 +86,11 @@ public class OrganisationEndpoint {
     @PreAuthorize("hasAuthority('SUPERADMIN')")
     @ResponseBody
     public ResponseEntity<Organisation> deleteOrganisation(@PathVariable("id") Long id) {
-        organisationService.deleteOrganisationById(id);
+        Optional<Organisation> organisation = organisationService.findOrganisationById(id);
+        if (organisation.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        organisationService.deleteOrganisation(organisation.get());
         return ResponseEntity.ok().build();
     }
 

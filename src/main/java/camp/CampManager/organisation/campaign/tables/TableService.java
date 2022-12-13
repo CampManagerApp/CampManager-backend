@@ -195,4 +195,14 @@ public class TableService {
         tableRepository.save(table);
         return ResponseEntity.ok(table);
     }
+
+    public void deleteTable(CampTable table) {
+        for (Long taskId : table.getTask_ids()) {
+            taskRepository.deleteById(taskId);
+        }
+        for (Long restId : table.getRestrictions_ids()) {
+            restrictionRepository.deleteById(restId);
+        }
+        tableRepository.deleteById(table.getId());
+    }
 }
