@@ -1,5 +1,6 @@
 package camp.CampManager.organisation.campaign.tables;
 
+import camp.CampManager.organisation.OrganisationRepository;
 import camp.CampManager.organisation.campaign.Campaign;
 import camp.CampManager.organisation.campaign.CampaignRepository;
 import camp.CampManager.organisation.campaign.counsellors.Counsellor;
@@ -30,6 +31,8 @@ public class TableService {
     private CounsellorRepository counsellorRepository;
     @Autowired
     private RestrictionRepository restrictionRepository;
+    @Autowired
+    private OrganisationRepository organisationRepository;
 
     public ResponseEntity<List<CampTable>> getAllTablesOfCampaign(Long orgId, Long campId) {
         var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
@@ -123,8 +126,9 @@ public class TableService {
                     }
                     case "COUNSELLOR_DAY" -> {
                         String counsellorFullName = restrictionSplit[1];
-                        String dayString = restrictionSplit[2];
-                        restrictionList.add(new CounsellorDayRestriction(counsellorFullName, dayString));
+                        List<String> daysString = List.of(restrictionSplit).subList(2, restrictionSplit.length);
+                        System.out.println(daysString);
+                        restrictionList.add(new CounsellorDayRestriction(counsellorFullName, daysString));
                     }
                     case "COUNSELLOR_TASK_DAY" -> {
                         String counsellorName = restrictionSplit[1];

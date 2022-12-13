@@ -1,5 +1,6 @@
 package camp.CampManager.organisation.campaign.tables.restrictions;
 
+import camp.CampManager.organisation.campaign.activities.StringStringConverter;
 import camp.CampManager.organisation.campaign.counsellors.Counsellor;
 import camp.CampManager.organisation.campaign.tables.CampTable;
 import camp.CampManager.organisation.campaign.tables.Task;
@@ -7,9 +8,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -20,11 +23,12 @@ import java.util.Set;
 public class CounsellorDayRestriction extends Restriction {
     public static RestrictionType restrictionType = RestrictionType.COUNSELLOR_DAY;
     String counsellor;
-    String day;
+    @Convert(converter = StringStringConverter.class)
+    List<String> days;
 
-    public CounsellorDayRestriction(String counsellor, String day) {
+    public CounsellorDayRestriction(String counsellor, List<String> days) {
         this.counsellor = counsellor;
-        this.day = day;
+        this.days = days;
     }
 
     @Override
@@ -32,7 +36,7 @@ public class CounsellorDayRestriction extends Restriction {
         Set<Set<Counsellor>> newAssignments = new HashSet<>();
         String day = next_slot.split(":")[0];
         String task = next_slot.split(":")[1];
-        if (!day.equals(this.day)) {
+        if (!days.contains(day)) {
             return possible_assignments;
         }
         for (Set<Counsellor> assignment : possible_assignments) {
