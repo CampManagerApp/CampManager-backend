@@ -7,6 +7,7 @@ import camp.CampManager.users.Membership;
 import camp.CampManager.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
@@ -29,6 +30,7 @@ public class OrganisationEndpoint {
     private HashCreator hashCreator;
 
     @GetMapping(path = "/")
+    @PreAuthorize("hasAuthority('SUPERADMIN')")
     @ResponseBody
     public ResponseEntity<List<Organisation>> getAllOrganisations() {
         return ResponseEntity.ok(organisationService.getAllOrganisations());
@@ -43,6 +45,7 @@ public class OrganisationEndpoint {
     }
 
     @GetMapping(path = "/{id}/code")
+    @PreAuthorize("hasAuthority('SUPERADMIN')")
     @ResponseBody
     public ResponseEntity<String> getOrganisationCode(@PathVariable("id") Long id) {
         Optional<Organisation> opt = organisationService.getOrganisationById(id);
@@ -80,6 +83,7 @@ public class OrganisationEndpoint {
     }
 
     @DeleteMapping(path = "/{id}")
+    @PreAuthorize("hasAuthority('SUPERADMIN')")
     @ResponseBody
     public ResponseEntity<Organisation> deleteOrganisation(@PathVariable("id") Long id) {
         organisationService.deleteOrganisationById(id);
@@ -87,6 +91,7 @@ public class OrganisationEndpoint {
     }
 
     @PostMapping(path = "/")
+    @PreAuthorize("hasAuthority('SUPERADMIN')")
     @ResponseBody
     public ResponseEntity<Organisation> createOrganisation(@RequestBody Organisation organisation) throws Exception {
         organisationService.createOrganisation(organisation);
@@ -96,6 +101,7 @@ public class OrganisationEndpoint {
     }
 
     @PutMapping(path = "/{id}")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#id.toString() + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<Organisation> updateOrganisation(@PathVariable("id") Long id,
                                                            @RequestBody Organisation organisation) {
@@ -134,6 +140,7 @@ public class OrganisationEndpoint {
     }
 
     @GetMapping(path = "/{id}/users")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#id.toString() + 'ADMIN') or hasAuthority(#id.toString() + 'USER')")
     @ResponseBody
     public ResponseEntity<List<DisplayUser>> findUsersOfOrganisation(@PathVariable("id") Long orgId) {
         var organisation_o = organisationService.getOrganisationById(orgId);
@@ -157,6 +164,7 @@ public class OrganisationEndpoint {
     }
 
     @GetMapping(path = "/{id}/names")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN') or hasAuthority(#orgId.toString() + 'USER')")
     @ResponseBody
     public ResponseEntity<List<DisplayUser>> findNamesOfOrganisation(@PathVariable("id") Long orgId) {
         var organisation_o = organisationService.getOrganisationById(orgId);

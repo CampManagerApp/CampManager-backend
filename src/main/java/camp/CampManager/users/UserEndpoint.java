@@ -6,6 +6,7 @@ import camp.CampManager.display.DisplayUser;
 import camp.CampManager.organisation.OrganisationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -34,6 +35,7 @@ public class UserEndpoint {
     }
 
     @GetMapping(path = "/all/")
+    @PreAuthorize("hasAuthority('SUPERADMIN')")
     @ResponseBody
     public ResponseEntity<List<DisplayUser>> findAllUsers() {
         var users = userService.getUsers();
@@ -60,6 +62,7 @@ public class UserEndpoint {
     }
 
     @PutMapping(path = "/role/")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#input.get(\"orgname\") + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<String> updateMembershipToUser(@RequestBody Map<String, String> input) {
         var username = input.get("username");
@@ -86,6 +89,7 @@ public class UserEndpoint {
     }
 
     @PostMapping(path = "/role/")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#input.get(\"orgname\") + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<String> createMembershipOfUser(@RequestBody Map<String, String> input) throws URISyntaxException {
         var username = input.get("username");
@@ -109,6 +113,7 @@ public class UserEndpoint {
     }
 
     @DeleteMapping(path = "/role/")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#input.get(\"orgname\") + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<String> deleteMembershipOfUser(@RequestBody Map<String, String> input) {
         var username = input.get("username");

@@ -2,6 +2,7 @@ package camp.CampManager.organisation.campaign.participants;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URISyntaxException;
@@ -18,6 +19,7 @@ public class ParticipantEndpoint {
     private ParticipantService participantService;
 
     @GetMapping("/{orgId}/campaign/{campId}/participant")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN') or hasAuthority(#orgId.toString() + 'USER')")
     @ResponseBody
     public ResponseEntity<List<Participant>> getCampaignParticipants(@PathVariable("orgId") Long orgId,
                                                                      @PathVariable("campId") Long campId){
@@ -25,14 +27,16 @@ public class ParticipantEndpoint {
     }
 
     @GetMapping("/{orgId}/campaign/{campId}/participant/info")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN') or hasAuthority(#orgId.toString() + 'USER')")
     @ResponseBody
-    public ResponseEntity<Participant> getCampaignParticipants(@PathVariable("orgId") Long orgId,
-                                                               @PathVariable("campId") Long campId,
-                                                               @RequestParam("name") String name) {
+    public ResponseEntity<Participant> getCampaignParticipantInfo(@PathVariable("orgId") Long orgId,
+                                                                  @PathVariable("campId") Long campId,
+                                                                  @RequestParam("name") String name) {
         return participantService.getInfoOfCampaignParticipant(orgId, campId, name);
     }
 
     @PostMapping("/{orgId}/campaign/{campId}/participant")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<String> addNewParticipantToCampaign(@PathVariable("orgId") Long orgId,
                                                               @PathVariable("campId") Long campId,
@@ -41,6 +45,7 @@ public class ParticipantEndpoint {
     }
 
     @DeleteMapping("/{orgId}/campaign/{campId}/participant")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<String> deleteParticipantFromCampaign(@PathVariable("orgId") Long orgId,
                                                                 @PathVariable("campId") Long campId,

@@ -24,7 +24,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -58,28 +57,28 @@ public class CampManagerApplication {
                     .username("joelaumedes")
                     .full_name("Joel Aumedes")
                     .password("joel")
-                    .role("ADMIN")
+                    .role("USER")
                     .build();
             CampUser mireia = CampUser.builder()
                     .email("mireia@joel.com")
                     .username("mireiacalvet")
                     .full_name("Mireia Calvet")
                     .password("mireia")
-                    .role("ADMIN")
+                    .role("USER")
                     .build();
             CampUser mariona = CampUser.builder()
                     .email("mariona@joel.com")
                     .username("marionavillaro")
                     .full_name("Mariona Villaró")
                     .password("mariona")
-                    .role("ADMIN")
+                    .role("USER")
                     .build();
             CampUser robert = CampUser.builder()
                     .email("robert@joel.com")
                     .username("robertcreus")
                     .full_name("Robert Creus")
                     .password("robert")
-                    .role("ADMIN")
+                    .role("USER")
                     .build();
 
             userService.saveUser(joel);

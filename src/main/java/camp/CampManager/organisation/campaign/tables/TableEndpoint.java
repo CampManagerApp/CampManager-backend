@@ -10,6 +10,7 @@ import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +42,7 @@ public class TableEndpoint {
     private TaskRepository taskRepository;
 
     @GetMapping("/{orgId}/campaign/{campId}/tables/all")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN') or hasAuthority(#orgId.toString() + 'USER')")
     @ResponseBody
     public ResponseEntity<List<CampTable>> getAllTablesOfCampaign(@PathVariable("orgId") Long orgId,
                                                                   @PathVariable("campId") Long campId) {
@@ -48,6 +50,7 @@ public class TableEndpoint {
     }
 
     @PostMapping("/{orgId}/campaign/{campId}/tables")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<String> createNewTableInCampaign(@PathVariable("orgId") Long orgId,
                                                            @PathVariable("campId") Long campId,
@@ -114,6 +117,7 @@ public class TableEndpoint {
     }
 
     @GetMapping("/{orgId}/campaign/{campId}/tables")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN') or hasAuthority(#orgId.toString() + 'USER')")
     @ResponseBody
     public ResponseEntity<CampTable> getTableOfCampaign(@PathVariable("orgId") Long orgId,
                                                         @PathVariable("campId") Long campId,
@@ -122,6 +126,7 @@ public class TableEndpoint {
     }
 
     @PutMapping("/{orgId}/campaign/{campId}/tables")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<CampTable> updateTableOfCampaign(@PathVariable("orgId") Long orgId,
                                                            @PathVariable("campId") Long campId,
@@ -179,6 +184,7 @@ public class TableEndpoint {
     }
 
     @DeleteMapping("/{orgId}/campaign/{campId}/tables")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<String> deleteTableOfCampaign(@PathVariable("orgId") Long orgId,
                                                         @PathVariable("campId") Long campId,
@@ -190,6 +196,7 @@ public class TableEndpoint {
     }
 
     @PostMapping("/{orgId}/campaign/{campId}/tables/solve")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN')")
     @ResponseBody
     public ResponseEntity<String> createSolveTableJob(@PathVariable("orgId") Long orgId,
                                                       @PathVariable("campId") Long campId,
