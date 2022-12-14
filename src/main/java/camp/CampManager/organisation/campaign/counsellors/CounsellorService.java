@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -49,7 +50,7 @@ public class CounsellorService {
         return ResponseEntity.ok(counsellors);
     }
 
-    public ResponseEntity<String> addNewCounsellorToCampaign(Long orgId, Long campId, Map<String, String> input) throws URISyntaxException, ParseException {
+    public ResponseEntity<Counsellor> addNewCounsellorToCampaign(Long orgId, Long campId, Map<String, String> input, HttpServletResponse response) throws URISyntaxException, ParseException {
         var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
         if (camp_o.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -58,7 +59,8 @@ public class CounsellorService {
         if (input.containsKey("fullName")) {
             counsellor_builder.fullName(input.get("fullName"));
         } else {
-            return ResponseEntity.badRequest().body("Name of counsellor missing");
+            response.setHeader("error", "Name of counsellor missing");
+            return ResponseEntity.badRequest().build();
         }
         if (input.containsKey("name")) {
             counsellor_builder.name(input.get("name"));
@@ -101,7 +103,7 @@ public class CounsellorService {
         var counsellor = counsellor_builder.build();
         counsellorRepository.save(counsellor);
         campaignService.addCounsellorToCampaign(camp_o.get(), counsellor);
-        return ResponseEntity.created(new URI("/organisation/id/campaign/id/counsellor")).build();
+        return ResponseEntity.created(new URI("/organisation/id/campaign/id/counsellor")).body(counsellor);
     }
 
     public void addNewCounsellorObjectToCampaign(Long orgId, Long campId, Counsellor counsellor) {

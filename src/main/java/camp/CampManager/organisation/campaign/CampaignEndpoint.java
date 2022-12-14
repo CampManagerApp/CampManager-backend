@@ -52,7 +52,7 @@ public class CampaignEndpoint {
         if (input.containsKey("campaign_name")) {
             campaign_builder.campaignName(input.get("campaign_name"));
         } else {
-                response.setHeader("error", "Campaign Name Missing. Key: 'campaign_name'");
+            response.setHeader("error", "Campaign Name Missing. Key: 'campaign_name'");
             return ResponseEntity.badRequest().build();
         }
         if (input.containsKey("start")) {

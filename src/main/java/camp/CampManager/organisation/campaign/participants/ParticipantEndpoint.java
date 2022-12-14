@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.List;
@@ -38,10 +39,11 @@ public class ParticipantEndpoint {
     @PostMapping("/{orgId}/campaign/{campId}/participant")
     @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN')")
     @ResponseBody
-    public ResponseEntity<String> addNewParticipantToCampaign(@PathVariable("orgId") Long orgId,
-                                                              @PathVariable("campId") Long campId,
-                                                              @RequestBody Map<String, String> input) throws URISyntaxException, ParseException {
-        return participantService.addNewParticipantToCampaign(orgId, campId, input);
+    public ResponseEntity<Participant> addNewParticipantToCampaign(@PathVariable("orgId") Long orgId,
+                                                                   @PathVariable("campId") Long campId,
+                                                                   @RequestBody Map<String, String> input,
+                                                                   HttpServletResponse response) throws URISyntaxException, ParseException {
+        return participantService.addNewParticipantToCampaign(orgId, campId, input, response);
     }
 
     @DeleteMapping("/{orgId}/campaign/{campId}/participant")

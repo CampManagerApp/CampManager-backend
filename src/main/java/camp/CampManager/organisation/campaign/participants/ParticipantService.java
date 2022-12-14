@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -45,7 +46,7 @@ public class ParticipantService {
         return ResponseEntity.ok(participants);
     }
 
-    public ResponseEntity<String> addNewParticipantToCampaign(Long orgId, Long campId, Map<String, String> input) throws URISyntaxException, ParseException {
+    public ResponseEntity<Participant> addNewParticipantToCampaign(Long orgId, Long campId, Map<String, String> input, HttpServletResponse response) throws URISyntaxException, ParseException {
         var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
         if (camp_o.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -53,11 +54,13 @@ public class ParticipantService {
         var participant_builder = Participant.builder();
         if (input.containsKey("fullName")) {
             if (participantRepository.existsByFullName(input.get("fullName"))) {
-                return ResponseEntity.badRequest().body("Participant already exists");
+                response.setHeader("error", "Participant already exists");
+                return ResponseEntity.badRequest().build();
             }
             participant_builder.fullName(input.get("fullName"));
         } else {
-            return ResponseEntity.badRequest().body("Name of participant missing");
+            response.setHeader("error", "Name of participant missing");
+            return ResponseEntity.badRequest().build();
         }
         if (input.containsKey("name")) {
             participant_builder.name(input.get("name"));
@@ -143,7 +146,7 @@ public class ParticipantService {
         var participant_instance = participant_builder.build();
         participantRepository.save(participant_instance);
         campaignService.addParticipantToCampaign(camp_o.get(), participant_instance);
-        return ResponseEntity.created(new URI("/organisation/id/campaign/id/participant")).build();
+        return ResponseEntity.created(new URI("/organisation/id/campaign/id/participant")).body(participant_instance);
     }
 
     public void addParticipantObjectToCampaign(Long orgId, Long campId, Participant participant) {

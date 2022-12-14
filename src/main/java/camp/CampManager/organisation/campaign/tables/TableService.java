@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -42,12 +43,14 @@ public class TableService {
         return ResponseEntity.ok(tableRepository.findByCampaignIdEquals(campId));
     }
 
-    public ResponseEntity<String> createNewTableInCampaign(Long orgId, Long campId, CampTable table) throws URISyntaxException {
+    public ResponseEntity<CampTable> createNewTableInCampaign(Long orgId, Long campId, CampTable table, HttpServletResponse response) throws URISyntaxException {
         var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
         if (camp_o.isEmpty()) {
+            response.setHeader("error", "Campaign not found");
             return ResponseEntity.notFound().build();
         }
         if (tableRepository.findByCampaignIdAndTableNameEquals(campId, table.getTableName()).isPresent()) {
+            response.setHeader("error", "Table already exists");
             return ResponseEntity.badRequest().build();
         }
         // Counsellors ja estan guardats, tasks i restrictions no
@@ -72,7 +75,7 @@ public class TableService {
         table.setStatus("CREATED");
         table.setGrid(new HashMap<>());
         tableRepository.save(table);
-        return ResponseEntity.created(new URI("/organisation/id/campaign/id/tables")).build();
+        return ResponseEntity.created(new URI("/organisation/id/campaign/id/tables")).body(table);
     }
 
     public ResponseEntity<CampTable> getTableByName(Long orgId, Long campId, String tableName) {

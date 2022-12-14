@@ -6,6 +6,7 @@ import camp.CampManager.organisation.campaign.counsellors.CounsellorRepository;
 import camp.CampManager.organisation.campaign.tables.restrictions.NoFirstYearOnlyRestriction;
 import camp.CampManager.organisation.campaign.tables.restrictions.RestrictionRepository;
 import camp.CampManager.organisation.campaign.tables.restrictions.SortByFavouriteRestriction;
+import camp.CampManager.users.MembershipRepository;
 import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,8 @@ public class TableEndpoint {
     private CampaignRepository campaignRepository;
     @Autowired
     private TaskRepository taskRepository;
+    @Autowired
+    private MembershipRepository membershipRepository;
 
     @GetMapping("/{orgId}/campaign/{campId}/tables/all")
     @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN') or hasAuthority(#orgId.toString() + 'USER')")
@@ -52,9 +55,10 @@ public class TableEndpoint {
     @PostMapping("/{orgId}/campaign/{campId}/tables")
     @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN')")
     @ResponseBody
-    public ResponseEntity<String> createNewTableInCampaign(@PathVariable("orgId") Long orgId,
-                                                           @PathVariable("campId") Long campId,
-                                                           @RequestBody Map<String, String> input) throws URISyntaxException {
+    public ResponseEntity<CampTable> createNewTableInCampaign(@PathVariable("orgId") Long orgId,
+                                                              @PathVariable("campId") Long campId,
+                                                              @RequestBody Map<String, String> input,
+                                                              HttpServletResponse response) throws URISyntaxException {
         var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
         if (camp_o.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -63,11 +67,13 @@ public class TableEndpoint {
         if (input.containsKey("tableName")) {
             buildingTable.tableName(input.get("tableName"));
         } else {
+            response.setHeader("error", "Table name missing");
             return ResponseEntity.badRequest().build();
         }
         if (input.containsKey("days")) {
             buildingTable.days(List.of(input.get("days").split(";")));
         } else {
+            response.setHeader("error", "Table days missing");
             return ResponseEntity.badRequest().build();
         }
         // Tasks as name,min,max;
@@ -83,15 +89,18 @@ public class TableEndpoint {
                 }
                 buildingTable.tasks(tasks);
             } catch (Exception e) {
+                response.setHeader("error", "Tasks list has wrong format: " + e.getMessage());
                 return ResponseEntity.badRequest().build();
             }
         } else {
+            response.setHeader("error", "List of tasks missing");
             return ResponseEntity.badRequest().build();
         }
         // Restrictions as list of type,par1,par2[,par3];...
         if (input.containsKey("restrictions")) {
             var restrictions = tableService.parseRestrictions(input.get("restrictions"));
             if (restrictions == null) {
+                response.setHeader("error", "Some error parsing restrictions");
                 return ResponseEntity.badRequest().build();
             }
             restrictions.add(new NoFirstYearOnlyRestriction());
@@ -103,6 +112,7 @@ public class TableEndpoint {
         if (input.containsKey("counsellors")) {
             var counsellors = tableService.parseCounsellors(input.get("counsellors"), camp_o.get());
             if (counsellors == null) {
+                response.setHeader("error", "Some error parsing counsellors");
                 return ResponseEntity.badRequest().build();
             }
             buildingTable.counsellors(counsellors);
@@ -113,7 +123,7 @@ public class TableEndpoint {
             counsellors.forEach(listCounsellor::add);
             buildingTable.counsellors(listCounsellor);
         }
-        return tableService.createNewTableInCampaign(orgId, campId, buildingTable.build());
+        return tableService.createNewTableInCampaign(orgId, campId, buildingTable.build(), response);
     }
 
     @GetMapping("/{orgId}/campaign/{campId}/tables")

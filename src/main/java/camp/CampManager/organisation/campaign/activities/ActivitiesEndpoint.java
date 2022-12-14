@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
@@ -44,10 +45,11 @@ public class ActivitiesEndpoint {
     @PostMapping("/{orgId}/campaign/{campId}/activities")
     @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN')")
     @ResponseBody
-    public ResponseEntity<String> createNewActivityInACampaign(@PathVariable("orgId") Long orgId,
-                                                               @PathVariable("campId") Long campId,
-                                                               @RequestBody Map<String, String> input) throws URISyntaxException {
-        return activitiesService.createNewActivityInCampaign(orgId, campId, input);
+    public ResponseEntity<Activity> createNewActivityInACampaign(@PathVariable("orgId") Long orgId,
+                                                                 @PathVariable("campId") Long campId,
+                                                                 @RequestBody Map<String, String> input,
+                                                                 HttpServletResponse response) throws URISyntaxException {
+        return activitiesService.createNewActivityInCampaign(orgId, campId, input, response);
     }
 
     @PutMapping("/{orgId}/campaign/{campId}/activities")

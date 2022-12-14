@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -54,7 +55,7 @@ public class ActivitiesService {
         return ResponseEntity.ok(activities);
     }
 
-    public ResponseEntity<String> createNewActivityInCampaign(Long orgId, Long campId, Map<String, String> input) throws URISyntaxException {
+    public ResponseEntity<Activity> createNewActivityInCampaign(Long orgId, Long campId, Map<String, String> input, HttpServletResponse response) throws URISyntaxException {
         var camp_o = campaignRepository.findByIdEqualsAndOrganisationIdEquals(campId, orgId);
         if (camp_o.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -62,30 +63,36 @@ public class ActivitiesService {
         var activity_builder = Activity.builder();
         if (input.containsKey("name")) {
             if (activitiesRepository.existsByActivityName(input.get("name"))) {
-                return ResponseEntity.badRequest().body("Activity with same name already exists");
+                response.setHeader("error", "Activity with same name already exists");
+                return ResponseEntity.badRequest().build();
             }
             activity_builder.activityName(input.get("name"));
         } else {
-            return ResponseEntity.badRequest().body("Name of activity missing");
+            response.setHeader("error", "Name of activity missing");
+            return ResponseEntity.badRequest().build();
         }
         activity_builder.campaignId(camp_o.get().getId());
         if (input.containsKey("start")) {
             try {
                 activity_builder.dayOfActivity(formatter.parse(input.get("start")));
             } catch (ParseException e) {
-                return ResponseEntity.badRequest().body("Wrong format start date. Correct format is dd-MM-yyyy");
+                response.setHeader("error", "Wrong format start date. Correct format is dd-MM-yyyy");
+                return ResponseEntity.badRequest().build();
             }
         } else {
-            return ResponseEntity.badRequest().body("Day of activity missing");
+            response.setHeader("error", "Day of activity missing");
+            return ResponseEntity.badRequest().build();
         }
         if (input.containsKey("time_of_activity")) {
             try {
                 activity_builder.timeOfActivity(TimeOfActivity.valueOf(input.get("time_of_activity")));
             } catch (IllegalArgumentException e) {
-                return ResponseEntity.badRequest().body("Bad time_of_activity. Valid values are MORNING, AFTERNOON, NIGHT, WHOLE_DAY");
+                response.setHeader("error", "Bad time_of_activity. Valid values are MORNING, AFTERNOON, NIGHT, WHOLE_DAY");
+                return ResponseEntity.badRequest().build();
             }
         } else {
-            return ResponseEntity.badRequest().body("Time of activity meeting");
+            response.setHeader("error", "Time of activity missing");
+            return ResponseEntity.badRequest().build();
         }
         if (input.containsKey("description")) {
             activity_builder.description(input.get("description"));
@@ -102,7 +109,7 @@ public class ActivitiesService {
         }
         var activity = activity_builder.build();
         activitiesRepository.save(activity);
-        return ResponseEntity.created(new URI("/organisation/id/campaign/id/activities")).build();
+        return ResponseEntity.created(new URI("/organisation/id/campaign/id/activities")).body(activity);
     }
 
     public void createNewActivityObjectInCampaign(Long orgId, Long campId, Activity activity) {

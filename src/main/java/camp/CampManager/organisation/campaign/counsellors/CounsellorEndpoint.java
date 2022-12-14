@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.List;
@@ -38,10 +39,11 @@ public class CounsellorEndpoint {
     @PostMapping("/{orgId}/campaign/{campId}/counsellor")
     @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN')")
     @ResponseBody
-    public ResponseEntity<String> addNewCounsellorToCampaign(@PathVariable("orgId") Long orgId,
-                                                              @PathVariable("campId") Long campId,
-                                                              @RequestBody Map<String, String> input) throws URISyntaxException, ParseException {
-        return counsellorService.addNewCounsellorToCampaign(orgId, campId, input);
+    public ResponseEntity<Counsellor> addNewCounsellorToCampaign(@PathVariable("orgId") Long orgId,
+                                                                 @PathVariable("campId") Long campId,
+                                                                 @RequestBody Map<String, String> input,
+                                                                 HttpServletResponse response) throws URISyntaxException, ParseException {
+        return counsellorService.addNewCounsellorToCampaign(orgId, campId, input, response);
     }
 
     @DeleteMapping("/{orgId}/campaign/{campId}/counsellor")
