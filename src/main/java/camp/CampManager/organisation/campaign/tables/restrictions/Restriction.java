@@ -20,6 +20,8 @@ public abstract class Restriction {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    private String name;
+
     /**
      * Given a list of possible assignments, return the list after reorder or eliminating the ones that don't fit
      *

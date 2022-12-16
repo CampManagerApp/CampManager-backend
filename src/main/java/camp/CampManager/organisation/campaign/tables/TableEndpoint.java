@@ -4,6 +4,7 @@ import camp.CampManager.organisation.campaign.CampaignRepository;
 import camp.CampManager.organisation.campaign.counsellors.Counsellor;
 import camp.CampManager.organisation.campaign.counsellors.CounsellorRepository;
 import camp.CampManager.organisation.campaign.tables.restrictions.NoFirstYearOnlyRestriction;
+import camp.CampManager.organisation.campaign.tables.restrictions.Restriction;
 import camp.CampManager.organisation.campaign.tables.restrictions.RestrictionRepository;
 import camp.CampManager.organisation.campaign.tables.restrictions.SortByFavouriteRestriction;
 import camp.CampManager.users.MembershipRepository;
@@ -105,6 +106,11 @@ public class TableEndpoint {
             }
             restrictions.add(new NoFirstYearOnlyRestriction());
             restrictions.add(new SortByFavouriteRestriction());
+            int i = 0;
+            for (Restriction restriction : restrictions) {
+                restriction.setName("Restriction number " + i);
+                i++;
+            }
             buildingTable.restrictions(restrictions);
         } else {
             buildingTable.restrictions(new LinkedList<>());
