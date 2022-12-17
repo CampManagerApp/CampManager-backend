@@ -2,6 +2,10 @@ package camp.CampManager.organisation.campaign;
 
 import camp.CampManager.display.DisplayCampaign;
 import camp.CampManager.display.DisplayService;
+import camp.CampManager.notifications.NotificationService;
+import camp.CampManager.organisation.Organisation;
+import camp.CampManager.organisation.OrganisationRepository;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -27,6 +32,9 @@ public class CampaignEndpoint {
     private CampaignService campaignService;
     @Autowired
     private DisplayService displayService;
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
 
     @GetMapping("/{id}/campaign")
     @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#id.toString() + 'ADMIN') or hasAuthority(#id.toString() + 'USER')")
@@ -46,7 +54,7 @@ public class CampaignEndpoint {
     @ResponseBody
     public ResponseEntity<Campaign> createCampaignOfOrganisation(@PathVariable("id") Long id,
                                                                  @RequestBody Map<String, String> input,
-                                                                 HttpServletResponse response) throws URISyntaxException {
+                                                                 HttpServletResponse response) throws URISyntaxException, FirebaseMessagingException {
         var campaign_builder = Campaign.builder();
         campaign_builder.organisationId(id);
         if (input.containsKey("campaign_name")) {
@@ -79,6 +87,8 @@ public class CampaignEndpoint {
         }
         Campaign campaign = campaign_builder.build();
         if (campaignService.saveCampaign(campaign)) {
+            Optional<Organisation> organisation = organisationRepository.findById(campaign.getOrganisationId());
+            NotificationService.programingCampaignCreationNotification(organisation.get(), campaign);
             return ResponseEntity.created(new URI("/organisation/" + id + "/campaign/")).body(campaign);
         } else {
             response.setHeader("error", "Campaign Name Duplicated");

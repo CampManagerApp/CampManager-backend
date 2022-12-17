@@ -10,6 +10,7 @@ import camp.CampManager.organisation.campaign.participants.Participant;
 import camp.CampManager.organisation.campaign.participants.ParticipantRepository;
 import camp.CampManager.organisation.campaign.tables.CampTable;
 import camp.CampManager.organisation.campaign.tables.TableService;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +38,7 @@ public class CampaignService {
     @Autowired
     private ActivitiesRepository activitiesRepository;
 
-    public boolean saveCampaign(Campaign campaign) {
+    public boolean saveCampaign(Campaign campaign) throws FirebaseMessagingException {
         if (campaignRepository.findByCampaignNameEqualsAndOrganisationIdEquals(campaign.getCampaignName(), campaign.getOrganisationId()).isPresent()) {
             return false;
         } else {
@@ -53,6 +54,7 @@ public class CampaignService {
             organisationRepository.save(organisation);
             return true;
         }
+
     }
 
     public Optional<Campaign> findCampaignByName(String campaign_name) {

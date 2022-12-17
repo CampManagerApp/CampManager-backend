@@ -37,6 +37,8 @@ services:
     #    command: sh run.sh
     depends_on:
       - "postgres"
+    env_file:
+      - ./.env
     ports:
       - 8080:8080
       - 35729:35729

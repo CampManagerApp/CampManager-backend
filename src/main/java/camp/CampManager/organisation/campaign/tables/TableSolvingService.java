@@ -1,5 +1,11 @@
 package camp.CampManager.organisation.campaign.tables;
 
+import camp.CampManager.notifications.NotificationService;
+import camp.CampManager.organisation.Organisation;
+import camp.CampManager.organisation.OrganisationRepository;
+import camp.CampManager.organisation.campaign.Campaign;
+import camp.CampManager.organisation.campaign.CampaignRepository;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import org.jobrunr.jobs.annotations.Job;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +18,12 @@ public class TableSolvingService {
     @Autowired
     private TableRepository tableRepository;
 
+    @Autowired
+    private CampaignRepository campaignRepository;
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
+
     @Job(name = "Solving table %1")
     public void solveTable(CampTable table, String table_name) {
         System.out.println("STARTING SOLVE TABLE " + table_name + " JOB");
@@ -20,6 +32,13 @@ public class TableSolvingService {
         tableRepository.save(table);
         table.solve();
         tableRepository.save(table);
+        Campaign campaign = campaignRepository.findById(table.getCampaignId()).get();
+        Organisation organisation = organisationRepository.findById(campaign.getOrganisationId()).get();
+        try {
+            NotificationService.programingSolvedTableNotification(organisation, table);
+        } catch (FirebaseMessagingException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("FINISHED SOLVE TABLE JOB");
     }
 }
