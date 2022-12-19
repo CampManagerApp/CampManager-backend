@@ -113,7 +113,10 @@ public class TableEndpoint {
             }
             buildingTable.restrictions(restrictions);
         } else {
-            buildingTable.restrictions(new LinkedList<>());
+            var restrictions = new LinkedList<Restriction>();
+            restrictions.add(new NoFirstYearOnlyRestriction());
+            restrictions.add(new SortByFavouriteRestriction());
+            buildingTable.restrictions(restrictions);
         }
         if (input.containsKey("counsellors")) {
             var counsellors = tableService.parseCounsellors(input.get("counsellors"), camp_o.get());
@@ -246,7 +249,6 @@ public class TableEndpoint {
 
         var myWriter = response.getWriter();
 
-        myWriter.write(fix(""));
         for (String day : tableObject.getDays()) {
             myWriter.write("," + day);
         }
