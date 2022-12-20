@@ -101,15 +101,6 @@ public class RestrictionsEndpoint {
         return restrictionService.createRestrictionInTable(orgId, campId, input.get("tableName"), restriction);
     }
 
-    @PutMapping("/{orgId}/campaign/{campId}/tables/restrictions")
-    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN')")
-    @ResponseBody
-    public ResponseEntity<Restriction> updateARestrictionInATable(@PathVariable("orgId") Long orgId,
-                                                                  @PathVariable("campId") Long campId,
-                                                                  @RequestBody Map<String, String> input) {
-        return null;
-    }
-
     @DeleteMapping("/{orgId}/campaign/{campId}/tables/restrictions")
     @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN')")
     @ResponseBody
