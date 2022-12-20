@@ -31,6 +31,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Autowired
     private ConfigProperties properties;
 
+    private String secret;
+
     private final Long validity = 60 * 60 * 1000L;
 
     private final AuthenticationManager authenticationManager;
@@ -56,9 +58,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
         User user = (User) authentication.getPrincipal();
-        //var secret = properties.getConfigValue("auth.secret");
-        //assert secret != null;
-        var secret = "secrét";
+        assert secret != null;
         Algorithm algorithm = Algorithm.HMAC256(secret.getBytes());
         String accessToken = JWT.create()
                 .withSubject(user.getUsername())
@@ -69,7 +69,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
         String refreshToken = JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + validity*2))
+                .withExpiresAt(new Date(System.currentTimeMillis() + validity * 2))
                 .withIssuer(request.getRequestURL().toString())
                 .sign(algorithm);
         Map<String, String> tokens = new HashMap<>();
@@ -77,5 +77,9 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         tokens.put("refresh_token", refreshToken);
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 }
