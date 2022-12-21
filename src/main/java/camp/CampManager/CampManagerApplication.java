@@ -57,7 +57,7 @@ public class CampManagerApplication {
                     .username("joelaumedes")
                     .full_name("Joel Aumedes")
                     .password("joel")
-                    .role("USER")
+                    .role("ADMIN")
                     .build();
             CampUser mireia = CampUser.builder()
                     .email("mireia@joel.com")
@@ -91,18 +91,18 @@ public class CampManagerApplication {
             organisationService.createOrganisation(xinoXano);
             organisationService.createOrganisation(sio);
 
-            nameService.addMembershipToName("Joel Aumedes Serrano", xinoXano, false, true);
+            nameService.addMembershipToName("Joel Aumedes Serrano", xinoXano, true, true);
             nameService.addMembershipToName("Miquel Aumedes Serrano", xinoXano, true, true);
-            nameService.addMembershipToName("Mireia Calvet Rubió", xinoXano, true, false);
+            nameService.addMembershipToName("Mireia Calvet Rubió", xinoXano, false, false);
 
             nameService.addMembershipToName("Mariona Villaró Vicens", sio, false, true);
             nameService.addMembershipToName("Robert Creus Tella", sio, true, true);
             nameService.addMembershipToName("Ares Miró", sio, true, false);
 
-            Membership membershipJoel = nameService.findNameMembership("Joel Aumedes Serrano", xinoXano).get();
-            membershipJoel.setUserId(joel.getId());
-            membershipJoel.set_claimed(true);
-            userService.saveMembership(membershipJoel);
+            Membership membershipMiquel = nameService.findNameMembership("Miquel Aumedes Serrano", xinoXano).get();
+            membershipMiquel.setUserId(joel.getId());
+            membershipMiquel.set_claimed(true);
+            userService.saveMembership(membershipMiquel);
             Membership membershipMireia = nameService.findNameMembership("Mireia Calvet Rubió", xinoXano).get();
             membershipMireia.setUserId(mireia.getId());
             membershipMireia.set_claimed(true);
@@ -184,10 +184,14 @@ public class CampManagerApplication {
             Counsellor joelCounsellor = Counsellor.builder()
                     .fullName("Joel Aumedes Serrano")
                     .name("Joel")
+                    .emergencyPhone(621215112)
+                    .surnames("Joel")
                     .build();
             Counsellor mireiaCounsellor = Counsellor.builder()
                     .fullName("Mireia Calvet Rubió")
                     .name("Mireia")
+                    .emergencyPhone(621215115)
+                    .surnames("Joel")
                     .build();
             Counsellor marionaCounsellor = Counsellor.builder()
                     .fullName("Mariona Villaró Vicens")

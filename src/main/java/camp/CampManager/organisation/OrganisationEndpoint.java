@@ -144,7 +144,7 @@ public class OrganisationEndpoint {
     }
 
     @GetMapping(path = "/{id}/users")
-    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#id.toString() + 'ADMIN') or hasAuthority(#id.toString() + 'USER')")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN') or hasAuthority(#orgId.toString() + 'USER')")
     @ResponseBody
     public ResponseEntity<List<DisplayUser>> findUsersOfOrganisation(@PathVariable("id") Long orgId) {
         var organisation_o = organisationService.getOrganisationById(orgId);
@@ -168,7 +168,6 @@ public class OrganisationEndpoint {
     }
 
     @GetMapping(path = "/{id}/names")
-    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#orgId.toString() + 'ADMIN') or hasAuthority(#orgId.toString() + 'USER')")
     @ResponseBody
     public ResponseEntity<List<DisplayUser>> findNamesOfOrganisation(@PathVariable("id") Long orgId) {
         var organisation_o = organisationService.getOrganisationById(orgId);
