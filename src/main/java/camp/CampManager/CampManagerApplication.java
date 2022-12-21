@@ -57,6 +57,13 @@ public class CampManagerApplication {
                     .username("joelaumedes")
                     .full_name("Joel Aumedes")
                     .password("joel")
+                    .role("SUPERADMIN")
+                    .build();
+            CampUser miquel = CampUser.builder()
+                    .email("miquel@joel.com")
+                    .username("miquelaumedes")
+                    .full_name("Miquel Aumedes")
+                    .password("miquel")
                     .role("ADMIN")
                     .build();
             CampUser mireia = CampUser.builder()
@@ -82,6 +89,7 @@ public class CampManagerApplication {
                     .build();
 
             userService.saveUser(joel);
+            userService.saveUser(miquel);
             userService.saveUser(mireia);
             userService.saveUser(mariona);
             userService.saveUser(robert);
@@ -100,7 +108,7 @@ public class CampManagerApplication {
             nameService.addMembershipToName("Ares Miró", sio, true, false);
 
             Membership membershipMiquel = nameService.findNameMembership("Miquel Aumedes Serrano", xinoXano).get();
-            membershipMiquel.setUserId(joel.getId());
+            membershipMiquel.setUserId(miquel.getId());
             membershipMiquel.set_claimed(true);
             userService.saveMembership(membershipMiquel);
             Membership membershipMireia = nameService.findNameMembership("Mireia Calvet Rubió", xinoXano).get();
@@ -185,13 +193,13 @@ public class CampManagerApplication {
                     .fullName("Joel Aumedes Serrano")
                     .name("Joel")
                     .emergencyPhone(621215112)
-                    .surnames("Joel")
+                    .surnames("Aumedes")
                     .build();
             Counsellor mireiaCounsellor = Counsellor.builder()
                     .fullName("Mireia Calvet Rubió")
                     .name("Mireia")
                     .emergencyPhone(621215115)
-                    .surnames("Joel")
+                    .surnames("Mireia")
                     .build();
             Counsellor marionaCounsellor = Counsellor.builder()
                     .fullName("Mariona Villaró Vicens")
@@ -203,6 +211,7 @@ public class CampManagerApplication {
                     .build();
 
             counsellorService.addNewCounsellorObjectToCampaign(xinoXano.getId(), xinoXanoColonies.getId(), joelCounsellor);
+            counsellorService.addNewCounsellorObjectToCampaign(xinoXano.getId(), xinoXanoColonies.getId(), mireiaCounsellor);
             counsellorService.addNewCounsellorObjectToCampaign(xinoXano.getId(), xinoXanoJoves.getId(), mireiaCounsellor);
             counsellorService.addNewCounsellorObjectToCampaign(sio.getId(), sioColonies.getId(), marionaCounsellor);
             counsellorService.addNewCounsellorObjectToCampaign(sio.getId(), sioColonies.getId(), robertCounsellor);
