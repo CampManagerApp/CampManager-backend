@@ -30,6 +30,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     @Autowired
     private ConfigProperties properties;
 
+    private String secret;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (request.getServletPath().equals("/api/login")) {
@@ -39,9 +41,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 try {
                     String token = authorizationHeader.substring("Bearer ".length());
-                    //var secret = properties.getConfigValue("auth.secret");
-                    //assert secret != null;
-                    var secret = "secrét";
+                    assert secret != null;
                     Algorithm algorithm = Algorithm.HMAC256(secret.getBytes());
                     JWTVerifier verifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = verifier.verify(token);
@@ -61,5 +61,9 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
             }
         }
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 }

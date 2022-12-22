@@ -5,6 +5,7 @@ import camp.CampManager.filter.CustomAuthorizationFilter;
 import camp.CampManager.users.CampUser;
 import camp.CampManager.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +35,9 @@ public class SecurityConfig {
     @Autowired
     UserRepository userRepository;
 
+    @Value("${auth.secret}")
+    public String secret;
+
 
     @Bean
     public UserDetailsService userDetailsService(BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -49,7 +53,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         AuthenticationConfiguration authenticationConfiguration = http.getSharedObject(AuthenticationConfiguration.class);
         http.authenticationManager(authenticationManager(authenticationConfiguration));
-        CustomAuthenticationFilter customFilter = new CustomAuthenticationFilter(authenticationManager((authenticationConfiguration)));
+        CustomAuthenticationFilter customFilter = new CustomAuthenticationFilter(authenticationManager(authenticationConfiguration));
+        customFilter.setSecret(secret);
         customFilter.setFilterProcessesUrl("/api/login/");
 
         http.cors(Customizer.withDefaults())
@@ -63,7 +68,9 @@ public class SecurityConfig {
                 .authenticated();
 
         http.addFilter(customFilter);
-        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        CustomAuthorizationFilter filth = new CustomAuthorizationFilter();
+        filth.setSecret(secret);
+        http.addFilterBefore(filth, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
