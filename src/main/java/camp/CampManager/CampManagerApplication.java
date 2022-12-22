@@ -223,7 +223,7 @@ public class CampManagerApplication {
                     .description("Presentacions sense saber el contingut")
                     .dayOfActivity(formatter.parse("17-08-2023"))
                     .timeOfActivity(TimeOfActivity.MORNING)
-                    .activityItems(List.of("Presentacions"))
+                    .activityItems(List.of("Presentations"))
                     .materialNeeded(List.of("4 o 5 presentacions"))
                     .build();
 
