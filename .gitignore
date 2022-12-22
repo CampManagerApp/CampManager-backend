@@ -5,3 +5,4 @@ pgadmin-data
 postgres-data
 run.sh
 docker_postgres_init.sql
+serviceAccountKey.json
