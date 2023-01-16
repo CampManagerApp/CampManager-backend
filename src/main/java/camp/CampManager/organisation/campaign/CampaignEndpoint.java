@@ -111,7 +111,7 @@ public class CampaignEndpoint {
             return ResponseEntity.badRequest().body("Campaign Name Missing. Key: 'campaign_name'");
         }
         if (input.containsKey("new_campaign_name")) {
-            campaign.setCampaignName(input.get("campaign_name"));
+            campaign.setCampaignName(input.get("new_campaign_name"));
         }
         if (input.containsKey("start")) {
             try {
