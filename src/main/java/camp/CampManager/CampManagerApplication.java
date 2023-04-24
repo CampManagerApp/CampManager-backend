@@ -52,13 +52,13 @@ public class CampManagerApplication {
                                      CounsellorService counsellorService,
                                      ActivitiesService activitiesService) {
         return args -> {
-        //     CampUser joel = CampUser.builder()
-        //             .email("joel@joel.com")
-        //             .username("joelaumedes")
-        //             .full_name("Joel Aumedes")
-        //             .password("joel")
-        //             .role("SUPERADMIN")
-        //             .build();
+            CampUser joel = CampUser.builder()
+                    .email("joel@joel.com")
+                    .username("joelaumedes")
+                    .full_name("Joel Aumedes")
+                    .password("joel")
+                    .role("SUPERADMIN")
+                    .build();
         //     CampUser miquel = CampUser.builder()
         //             .email("miquel@joel.com")
         //             .username("miquelaumedes")
