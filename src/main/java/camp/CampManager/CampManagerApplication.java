@@ -97,15 +97,6 @@ public class CampManagerApplication {
             membershipMireia.set_claimed(true);
             userService.saveMembership(membershipMireia);
 
-        //     Membership membershipMariona = nameService.findNameMembership("Mariona Villaró Vicens", sio).get();
-            membershipMariona.setUserId(mariona.getId());
-            membershipMariona.set_claimed(true);
-            userService.saveMembership(membershipMariona);
-            Membership membershipRobert = nameService.findNameMembership("Robert Creus Tella", sio).get();
-            membershipRobert.setUserId(robert.getId());
-            membershipRobert.set_claimed(true);
-            userService.saveMembership(membershipRobert);
-
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
             Campaign xinoXanoColonies = Campaign.builder()
@@ -133,43 +124,6 @@ public class CampManagerApplication {
             campaignService.saveCampaign(xinoXanoJoves);
             campaignService.saveCampaign(sioColonies);
 
-            Participant p1 = Participant.builder()
-                    .fullName("Pau Fuster")
-                    .name("Pau")
-                    .surnames("Fuster")
-                    .foodAffection("Lactose Intolerant")
-                    .build();
-            Participant p2 = Participant.builder()
-                    .fullName("Jose Luis Muñoz")
-                    .name("Jose Luis")
-                    .surnames("Muñoz")
-                    .ibuprofen(false)
-                    .build();
-            Participant p3 = Participant.builder()
-                    .fullName("Manu Carrer")
-                    .name("Manu")
-                    .surnames("Carrer")
-                    .birthday(new Date())
-                    .build();
-            Participant p4 = Participant.builder()
-                    .fullName("Xavier Compai")
-                    .name("Xavier")
-                    .surnames("Compai")
-                    .contactEmailOne("compais@joel.com")
-                    .build();
-            Participant p5 = Participant.builder()
-                    .fullName("Guillem Cadí")
-                    .name("Guillem")
-                    .surnames("Cadí")
-                    .nonFoodAffection("Leg Injury")
-                    .build();
-
-            participantService.addParticipantObjectToCampaign(xinoXano.getId(), xinoXanoColonies.getId(), p1);
-            participantService.addParticipantObjectToCampaign(xinoXano.getId(), xinoXanoColonies.getId(), p2);
-            participantService.addParticipantObjectToCampaign(xinoXano.getId(), xinoXanoJoves.getId(), p3);
-            participantService.addParticipantObjectToCampaign(sio.getId(), sioColonies.getId(), p4);
-            participantService.addParticipantObjectToCampaign(sio.getId(), sioColonies.getId(), p5);
-
             Counsellor joelCounsellor = Counsellor.builder()
                     .fullName("Joel Aumedes Serrano")
                     .name("Joel")
@@ -182,48 +136,10 @@ public class CampManagerApplication {
                     .emergencyPhone(621215115)
                     .surnames("Mireia")
                     .build();
-            Counsellor marionaCounsellor = Counsellor.builder()
-                    .fullName("Mariona Villaró Vicens")
-                    .name("Mariona")
-                    .build();
-            Counsellor robertCounsellor = Counsellor.builder()
-                    .fullName("Robert Creus Tella")
-                    .name("Robert")
-                    .build();
 
             counsellorService.addNewCounsellorObjectToCampaign(xinoXano.getId(), xinoXanoColonies.getId(), joelCounsellor);
             counsellorService.addNewCounsellorObjectToCampaign(xinoXano.getId(), xinoXanoColonies.getId(), mireiaCounsellor);
             counsellorService.addNewCounsellorObjectToCampaign(xinoXano.getId(), xinoXanoJoves.getId(), mireiaCounsellor);
-            counsellorService.addNewCounsellorObjectToCampaign(sio.getId(), sioColonies.getId(), marionaCounsellor);
-            counsellorService.addNewCounsellorObjectToCampaign(sio.getId(), sioColonies.getId(), robertCounsellor);
-
-            Activity activityColonies = Activity.builder()
-                    .activityName("Gimkana Guarra")
-                    .dayOfActivity(formatter.parse("14-07-2023"))
-                    .timeOfActivity(TimeOfActivity.MORNING)
-                    .activityItems(List.of("Prova 1: Bassa de fang", "Prova2: Afeitar globus"))
-                    .materialNeeded(List.of("Globus", "Fang"))
-                    .build();
-            Activity activityJoves = Activity.builder()
-                    .activityName("Slideshow")
-                    .description("Presentacions sense saber el contingut")
-                    .dayOfActivity(formatter.parse("17-08-2023"))
-                    .timeOfActivity(TimeOfActivity.MORNING)
-                    .activityItems(List.of("Presentacions"))
-                    .materialNeeded(List.of("4 o 5 presentacions"))
-                    .build();
-            Activity sioActivity = Activity.builder()
-                    .activityName("Slideshow")
-                    .description("Presentacions sense saber el contingut")
-                    .dayOfActivity(formatter.parse("17-08-2023"))
-                    .timeOfActivity(TimeOfActivity.MORNING)
-                    .activityItems(List.of("Presentations"))
-                    .materialNeeded(List.of("4 o 5 presentacions"))
-                    .build();
-
-            activitiesService.createNewActivityObjectInCampaign(xinoXano.getId(), xinoXanoColonies.getId(), activityColonies);
-            activitiesService.createNewActivityObjectInCampaign(xinoXano.getId(), xinoXanoJoves.getId(), activityJoves);
-            activitiesService.createNewActivityObjectInCampaign(sio.getId(), sioColonies.getId(), sioActivity);
         };
     }
 }
