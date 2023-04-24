@@ -52,52 +52,52 @@ public class CampManagerApplication {
                                      CounsellorService counsellorService,
                                      ActivitiesService activitiesService) {
         return args -> {
-            CampUser joel = CampUser.builder()
-                    .email("joel@joel.com")
-                    .username("joelaumedes")
-                    .full_name("Joel Aumedes")
-                    .password("joel")
-                    .role("SUPERADMIN")
-                    .build();
-            CampUser miquel = CampUser.builder()
-                    .email("miquel@joel.com")
-                    .username("miquelaumedes")
-                    .full_name("Miquel Aumedes")
-                    .password("miquel")
-                    .role("ADMIN")
-                    .build();
-            CampUser mireia = CampUser.builder()
-                    .email("mireia@joel.com")
-                    .username("mireiacalvet")
-                    .full_name("Mireia Calvet")
-                    .password("mireia")
-                    .role("USER")
-                    .build();
+        //     CampUser joel = CampUser.builder()
+        //             .email("joel@joel.com")
+        //             .username("joelaumedes")
+        //             .full_name("Joel Aumedes")
+        //             .password("joel")
+        //             .role("SUPERADMIN")
+        //             .build();
+        //     CampUser miquel = CampUser.builder()
+        //             .email("miquel@joel.com")
+        //             .username("miquelaumedes")
+        //             .full_name("Miquel Aumedes")
+        //             .password("miquel")
+        //             .role("ADMIN")
+        //             .build();
+        //     CampUser mireia = CampUser.builder()
+        //             .email("mireia@joel.com")
+        //             .username("mireiacalvet")
+        //             .full_name("Mireia Calvet")
+        //             .password("mireia")
+        //             .role("USER")
+        //             .build();
 
-            userService.saveUser(joel);
-            userService.saveUser(miquel);
-            userService.saveUser(mireia);
+        //     userService.saveUser(joel);
+        //     userService.saveUser(miquel);
+        //     userService.saveUser(mireia);
 
-            Organisation xinoXano = new Organisation("Xino-Xano", "Miquel Aumedes", "Esplai Xino-Xano Bellvís");
-            Organisation sio = new Organisation("Sió", "Ares Miró", "Esplai Sió Agramunt");
-            organisationService.createOrganisation(xinoXano);
-            organisationService.createOrganisation(sio);
+        //     Organisation xinoXano = new Organisation("Xino-Xano", "Miquel Aumedes", "Esplai Xino-Xano Bellvís");
+        //     Organisation sio = new Organisation("Sió", "Ares Miró", "Esplai Sió Agramunt");
+        //     organisationService.createOrganisation(xinoXano);
+        //     organisationService.createOrganisation(sio);
 
-            nameService.addMembershipToName("Joel Aumedes Serrano", xinoXano, true, true);
-            nameService.addMembershipToName("Miquel Aumedes Serrano", xinoXano, true, true);
-            nameService.addMembershipToName("Mireia Calvet Rubió", xinoXano, false, false);
+        //     nameService.addMembershipToName("Joel Aumedes Serrano", xinoXano, true, true);
+        //     nameService.addMembershipToName("Miquel Aumedes Serrano", xinoXano, true, true);
+        //     nameService.addMembershipToName("Mireia Calvet Rubió", xinoXano, false, false);
 
             
-            Membership membershipMiquel = nameService.findNameMembership("Miquel Aumedes Serrano", xinoXano).get();
-            membershipMiquel.setUserId(miquel.getId());
-            membershipMiquel.set_claimed(true);
-            userService.saveMembership(membershipMiquel);
-            Membership membershipMireia = nameService.findNameMembership("Mireia Calvet Rubió", xinoXano).get();
-            membershipMireia.setUserId(mireia.getId());
-            membershipMireia.set_claimed(true);
-            userService.saveMembership(membershipMireia);
+        //     Membership membershipMiquel = nameService.findNameMembership("Miquel Aumedes Serrano", xinoXano).get();
+        //     membershipMiquel.setUserId(miquel.getId());
+        //     membershipMiquel.set_claimed(true);
+        //     userService.saveMembership(membershipMiquel);
+        //     Membership membershipMireia = nameService.findNameMembership("Mireia Calvet Rubió", xinoXano).get();
+        //     membershipMireia.setUserId(mireia.getId());
+        //     membershipMireia.set_claimed(true);
+        //     userService.saveMembership(membershipMireia);
 
-        //     Membership membershipMariona = nameService.findNameMembership("Mariona Villaró Vicens", sio).get();
+        // //     Membership membershipMariona = nameService.findNameMembership("Mariona Villaró Vicens", sio).get();
         //     membershipMariona.setUserId(mariona.getId());
         //     membershipMariona.set_claimed(true);
         //     userService.saveMembership(membershipMariona);
