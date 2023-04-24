@@ -1,6 +1,5 @@
 package camp.CampManager.organisation.campaign.tables;
 
-import camp.CampManager.notifications.NotificationService;
 import camp.CampManager.organisation.Organisation;
 import camp.CampManager.organisation.OrganisationRepository;
 import camp.CampManager.organisation.campaign.Campaign;
