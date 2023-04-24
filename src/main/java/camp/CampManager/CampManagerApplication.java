@@ -36,12 +36,12 @@ public class CampManagerApplication {
         SpringApplication.run(CampManagerApplication.class, args);
     }
 
-    @Bean
-    public StorageProvider storageProvider(JobMapper jobMapper) {
-        InMemoryStorageProvider storageProvider = new InMemoryStorageProvider();
-        storageProvider.setJobMapper(jobMapper);
-        return storageProvider;
-    }
+//     @Bean
+//     public StorageProvider storageProvider(JobMapper jobMapper) {
+//         InMemoryStorageProvider storageProvider = new InMemoryStorageProvider();
+//         storageProvider.setJobMapper(jobMapper);
+//         return storageProvider;
+//     }
 
     @Bean
     CommandLineRunner initializeData(OrganisationService organisationService,
