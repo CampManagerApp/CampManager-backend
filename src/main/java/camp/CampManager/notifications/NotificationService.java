@@ -26,16 +26,16 @@ public class NotificationService {
     }
 
     public static void programingCampaignCreationNotification(Organisation organisation, Campaign campaign) throws FirebaseMessagingException {
-    //     String topic = "organisation" + String.valueOf(organisation.getId());
-    //     String title = "A campaign of " + organisation.getName() + " has been created";
-    //     String body = "The campaign " + campaign.getCampaignName() + " has been created!!";
+        String topic = "organisation" + String.valueOf(organisation.getId());
+        String title = "A campaign of " + organisation.getName() + " has been created";
+        String body = "The campaign " + campaign.getCampaignName() + " has been created!!";
         sendProgramedMessage(topic, title, body, campaign.getStartDate().toString());
     }
 
     public static void programingSolvedTableNotification(Organisation organisation, CampTable campTable) throws FirebaseMessagingException {
-        // String topic = "organisation" + String.valueOf(organisation.getId());
-        // String title = "A new campaign table available of the organisation " +  organisation.getName();
-        // String body = "The table " + campTable.getTableName() + " available!!";
+        String topic = "organisation" + String.valueOf(organisation.getId());
+        String title = "A new campaign table available of the organisation " +  organisation.getName();
+        String body = "The table " + campTable.getTableName() + " available!!";
         sendProgramedMessage(topic, title, body, "");
     }
 }
