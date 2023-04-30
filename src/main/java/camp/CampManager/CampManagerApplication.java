@@ -81,38 +81,39 @@ public class CampManagerApplication {
 
 
             CampUser luis = CampUser.builder()
-                                .email("luis@joel.com")
-                                .username("luis")
-                                .full_name("Luis")
-                                .password("luis")
-                                .role("SUPERADMIN")
-                                .build();
-                        CampUser moi = CampUser.builder()
-                                .email("moi@joel.com")
-                                .username("moi")
-                                .full_name("Moi")
-                                .password("moi")
-                                .role("ADMIN")
-                                .build();
-                        CampUser yareli = CampUser.builder()
-                                .email("yareli@joel.com")
-                                .username("yareli")
-                                .full_name("Yareli")
-                                .password("yareli")
-                                .role("ADMIN")
-                                .build();
-                            
-                            CampUser marc = CampUser.builder()
-                            .email("marc@joel.com")
-                            .username("marc")
-                            .full_name("marc")
-                            .password("marc")
-                            .role("ADMIN")
-                            .build();
-                        userService.saveUser(luis);
-                        userService.saveUser(moi);
-                        userService.saveUser(yareli);
-                        userService.saveUser(marc);
+                .email("luis@joel.com")
+                .username("luis")
+                .full_name("Luis")
+                .password("luis")
+                .role("SUPERADMIN")
+                .build();
+
+            CampUser moi = CampUser.builder()
+                .email("moi@joel.com")
+                .username("moi")
+                .full_name("Moi")
+                .password("moi")
+                .role("ADMIN")
+                .build();
+            CampUser yareli = CampUser.builder()
+                .email("yareli@joel.com")
+                .username("yareli")
+                .full_name("Yareli")
+                .password("yareli")
+                .role("ADMIN")
+                .build();
+
+            CampUser marc = CampUser.builder()
+                .email("marc@joel.com")
+                .username("marc")
+                .full_name("marc")
+                .password("marc")
+                .role("ADMIN")
+                .build();
+            userService.saveUser(luis);
+            userService.saveUser(moi);
+            userService.saveUser(yareli);
+            userService.saveUser(marc);
 
             Organisation xinoXano = new Organisation("Xino-Xano", "Miquel Aumedes", "Esplai Xino-Xano Bellvís");
             Organisation sio = new Organisation("Sió", "Ares Miró", "Esplai Sió Agramunt");
