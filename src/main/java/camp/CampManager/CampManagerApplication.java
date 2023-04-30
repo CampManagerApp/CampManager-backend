@@ -79,7 +79,7 @@ public class CampManagerApplication {
             userService.saveUser(mireia);
 
 
-
+            /*
             CampUser luis = CampUser.builder()
                 .email("luis@joel.com")
                 .username("luis")
@@ -115,6 +115,7 @@ public class CampManagerApplication {
             userService.saveUser(moi);
             userService.saveUser(yareli);
             userService.saveUser(marc);
+            */
 
             Organisation xinoXano = new Organisation("Xino-Xano", "Miquel Aumedes", "Esplai Xino-Xano Bellvís");
             Organisation sio = new Organisation("Sió", "Ares Miró", "Esplai Sió Agramunt");
