@@ -110,6 +110,7 @@ public class CampManagerApplication {
                 .password("marc")
                 .role("ADMIN")
                 .build();
+
             userService.saveUser(luis);
             userService.saveUser(moi);
             userService.saveUser(yareli);
