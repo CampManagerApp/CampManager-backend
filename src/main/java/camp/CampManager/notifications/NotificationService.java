@@ -9,7 +9,7 @@ import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 
 public class NotificationService {
-
+    /*
     private static void sendProgramedMessage(String topic, String title, String body, String date) throws FirebaseMessagingException {
        // String token = "fAVrFR3VQCi7GqSjBfDjHw:APA91bGyagKGgedfG_3PKSAZFnpeTjcVaCgmkSLfwbo3mI7CiuCVj_jSlMGZooZ6g3f737w780-YgQsR8TlKEyBoJOjTW2ehqD4qjDU2HCplb0hOmlcl-nUVREjFmP2tfx3MRbsmE79Q";
         Message message = Message.builder()
@@ -35,4 +35,5 @@ public class NotificationService {
         String body = "The table " + campTable.getTableName() + " available!!";
         sendProgramedMessage(topic, title, body, "");
     }
+     */
 }

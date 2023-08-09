@@ -88,7 +88,7 @@ public class CampaignEndpoint {
         Campaign campaign = campaign_builder.build();
         if (campaignService.saveCampaign(campaign)) {
             Optional<Organisation> organisation = organisationRepository.findById(campaign.getOrganisationId());
-            NotificationService.programingCampaignCreationNotification(organisation.get(), campaign);
+            //NotificationService.programingCampaignCreationNotification(organisation.get(), campaign);
             return ResponseEntity.created(new URI("/organisation/" + id + "/campaign/")).body(campaign);
         } else {
             response.setHeader("error", "Campaign Name Duplicated");

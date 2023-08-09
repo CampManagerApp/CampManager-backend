@@ -13,6 +13,7 @@ import java.io.IOException;
 @Configuration
 public class NotificationsConfiguration {
 
+    /*
     @Bean
     FirebaseMessaging firebaseMessaging(FirebaseApp firebaseApp) {
         return FirebaseMessaging.getInstance(firebaseApp);
@@ -35,4 +36,5 @@ public class NotificationsConfiguration {
             throw new RuntimeException(e);
         }
     }
+    */
 }

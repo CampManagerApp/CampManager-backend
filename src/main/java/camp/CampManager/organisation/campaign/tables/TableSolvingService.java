@@ -34,11 +34,13 @@ public class TableSolvingService {
         tableRepository.save(table);
         Campaign campaign = campaignRepository.findById(table.getCampaignId()).get();
         Organisation organisation = organisationRepository.findById(campaign.getOrganisationId()).get();
+        /*
         try {
             NotificationService.programingSolvedTableNotification(organisation, table);
         } catch (FirebaseMessagingException e) {
             throw new RuntimeException(e);
         }
+         */
         System.out.println("FINISHED SOLVE TABLE JOB");
     }
 }

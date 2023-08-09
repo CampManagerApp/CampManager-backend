@@ -10,6 +10,8 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: camp_manager_db
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
@@ -20,8 +22,6 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
-    volumes:
-      - ./pgadmin-data:/var/lib/pgadmin
     ports:
     - "5050:80"
 
@@ -45,3 +45,17 @@ services:
       - 35729:35729
       - 5005:5005
       - 28000:28000
+
+  keycloak-container:
+    image: quay.io/keycloak/keycloak:22.0.1
+    ports:
+      - 8001:8080
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    restart: always
+    command:
+      - "start-dev --db=postgres --db-url=jdbc:postgresql://pg_container:5432/camp_manager_db --db-username=admin --db-password=admin"
+
+volumes:
+  postgres-data:

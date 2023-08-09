@@ -14,6 +14,7 @@ import java.util.Map;
 @RequestMapping(value = "/notifications/")
 public class NotificationsEndpoints {
 
+    /*
     @PostMapping("/test")
     public String testNotification(@RequestBody Map<String, String> body) throws FirebaseMessagingException {
         String token = body.get("token");
@@ -26,4 +27,5 @@ public class NotificationsEndpoints {
                 .build();
         return FirebaseMessaging.getInstance().send(message);
     }
+     */
 }
