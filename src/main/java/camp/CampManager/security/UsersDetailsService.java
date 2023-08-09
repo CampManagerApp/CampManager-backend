@@ -31,7 +31,6 @@ public class UsersDetailsService implements UserDetailsService {
         if (user_o.isPresent()) {
             CampUser user = user_o.get();
             List<Membership> memberships = membershipRepository.findByUserIdEquals(user.getId());
-            // TODO Obtenir totes les authorities necessaries
             Collection<SimpleGrantedAuthority> authorities = new LinkedList<>();
             for (Membership membership : memberships) {
                 if (membership.is_admin) {
