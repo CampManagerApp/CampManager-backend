@@ -31,11 +31,6 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    volumes:
-      - ./:/app
-    #      - ./.m2:/root/.m2
-    working_dir: /app
-    #    command: sh run.sh
     depends_on:
       - "postgres"
     env_file:

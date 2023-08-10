@@ -2,10 +2,8 @@ package camp.CampManager.filter;
 
 import camp.CampManager.security.ConfigProperties;
 import camp.CampManager.security.UsersDetailsService;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
+import camp.CampManager.users.CampUser;
+import camp.CampManager.users.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +30,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
@@ -43,6 +40,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     private ConfigProperties properties;
     @Autowired
     private UsersDetailsService usersDetailsService;
+    @Autowired
+    private UserRepository userRepository;
 
     private String secret;
 
@@ -58,6 +57,15 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     // TODO Aquí el servidor descodifica el JWT per a obtenir els rols
                     // Canviar això per agafar el JWT proporcionat pel Keycloak per treure la info de l'usuari
                     String username = getUsernameFromKC(token);
+                    // Si aixo ha funcionat vol dir que el usuari esta registrat
+                    // Comprovar si el usuari esta a la BBDD, si no ho està crear-lo
+                    if (userRepository.findByUsername(username).isEmpty()) {
+                        userRepository.save(CampUser.builder()
+                                .username(username)
+                                .role("USER")
+                                .build());
+                    }
+                    // Sinó loadUserByUsername fallarà
                     // Fer un loadUserByUsername per a carregar les authorities
                     User user = (User) usersDetailsService.loadUserByUsername(username);
                     /* OLD
