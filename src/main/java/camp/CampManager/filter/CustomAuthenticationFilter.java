@@ -54,7 +54,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         // extract request params
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        System.out.println("username " + username + " password:" + password);
+        System.out.println("username: " + username + " password: " + password);
         //log.debug();
 
         // authenticate user
@@ -66,7 +66,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
         User user = (User) authentication.getPrincipal();
-        // TODO Aixo en teoria no funcione pero tampoc s'ha de fer servir
         assert secret != null;
         Algorithm algorithm = Algorithm.HMAC256(secret.getBytes());
         String accessToken = JWT.create()

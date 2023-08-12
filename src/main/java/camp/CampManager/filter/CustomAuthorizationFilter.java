@@ -4,6 +4,10 @@ import camp.CampManager.security.ConfigProperties;
 import camp.CampManager.security.UsersDetailsService;
 import camp.CampManager.users.CampUser;
 import camp.CampManager.users.UserRepository;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +34,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
@@ -54,31 +59,15 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 try {
                     String token = authorizationHeader.substring("Bearer ".length());
-                    // TODO Aquí el servidor descodifica el JWT per a obtenir els rols
-                    // Canviar això per agafar el JWT proporcionat pel Keycloak per treure la info de l'usuari
-                    String username = getUsernameFromKC(token);
-                    // Si aixo ha funcionat vol dir que el usuari esta registrat
-                    // Comprovar si el usuari esta a la BBDD, si no ho està crear-lo
-                    if (userRepository.findByUsername(username).isEmpty()) {
-                        userRepository.save(CampUser.builder()
-                                .username(username)
-                                .role("USER")
-                                .build());
-                    }
-                    // Sinó loadUserByUsername fallarà
-                    // Fer un loadUserByUsername per a carregar les authorities
-                    User user = (User) usersDetailsService.loadUserByUsername(username);
-                    /* OLD
+                    System.out.println(token);
                     assert secret != null;
                     Algorithm algorithm = Algorithm.HMAC256(secret.getBytes());
                     JWTVerifier verifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = verifier.verify(token);
                     String username = decodedJWT.getSubject();
                     String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
-                     */
-                    // Crear authorities tal com estan aqui
                     Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                    user.getAuthorities().forEach(role -> authorities.add((SimpleGrantedAuthority) role));
+                    stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(username, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
@@ -104,7 +93,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 .build();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://keycloak-container:8080/realms/campmanager/protocol/openid-connect/userinfo"))
-                .method("POST", HttpRequest.BodyPublishers.noBody())
+                .method("GET", HttpRequest.BodyPublishers.noBody())
                 .header("Authorization", "Bearer " + token)
                 .build();
         HttpResponse<String> response = null;
@@ -122,11 +111,12 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     public String getUsernameFromKC(String token) throws AuthenticationException, JsonProcessingException {
         var result = getInfoFromKC(token);
-        if (result.containsKey("given_name")) {
-            return (String) result.get("given_name");
-        }
+        System.out.println(result);
         if (result.containsKey("preferred_username")) {
             return (String) result.get("preferred_username");
+        }
+        if (result.containsKey("given_name")) {
+            return (String) result.get("given_name");
         }
         throw new AuthenticationException();
     }

@@ -14,6 +14,12 @@ services:
       - ./postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "--host=pg_container", "--port=5432", "--username=admin" ]
+      interval: 15s
+      timeout: 30s
+      retries: 40
+      start_period: 30s
 
   pgadmin:
     container_name: pgadmin_4
@@ -31,8 +37,6 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    depends_on:
-      - "postgres"
     env_file:
       - ./.env
     ports:
@@ -40,17 +44,9 @@ services:
       - 35729:35729
       - 5005:5005
       - 28000:28000
-
-  keycloak-container:
-    image: quay.io/keycloak/keycloak:22.0.1
-    ports:
-      - 8001:8080
-    environment:
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin
-    restart: always
-    command:
-      - "start-dev --db=postgres --db-url=jdbc:postgresql://pg_container:5432/camp_manager_db --db-username=admin --db-password=admin"
+    depends_on:
+      postgres:
+        condition: "service_healthy"
 
 volumes:
   postgres-data:
