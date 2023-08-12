@@ -27,7 +27,7 @@ public class UserEndpoint {
     @Autowired
     public DisplayService displayService;
 
-    @GetMapping(path = "/")
+    @GetMapping(path = "/byname/")
     @ResponseBody
     public ResponseEntity<DisplayUser> findUser(@RequestParam("username") String username) {
         var user_o = userService.findUserByUsername(username);
@@ -142,7 +142,8 @@ public class UserEndpoint {
         if (user_o.isPresent()) {
             return ResponseEntity.badRequest().build();
         } else {
-            userService.saveUser(user);
+            // TODO Reactivar aixo quan funcioni tot
+            // userService.saveUser(user);
             return ResponseEntity.created(new URI("/users/")).build();
         }
     }

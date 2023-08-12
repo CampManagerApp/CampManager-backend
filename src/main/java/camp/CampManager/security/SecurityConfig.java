@@ -64,6 +64,8 @@ public class SecurityConfig {
                 .sessionCreationPolicy(STATELESS)
                 .and()
                 .authorizeRequests()
+                .antMatchers("/users/")
+                .permitAll()
                 .anyRequest()
                 .authenticated();
 
