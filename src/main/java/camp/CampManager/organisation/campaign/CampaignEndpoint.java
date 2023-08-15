@@ -2,7 +2,6 @@ package camp.CampManager.organisation.campaign;
 
 import camp.CampManager.display.DisplayCampaign;
 import camp.CampManager.display.DisplayService;
-import camp.CampManager.notifications.NotificationService;
 import camp.CampManager.organisation.Organisation;
 import camp.CampManager.organisation.OrganisationRepository;
 import com.google.firebase.messaging.FirebaseMessagingException;
@@ -42,6 +41,19 @@ public class CampaignEndpoint {
     public ResponseEntity<DisplayCampaign> findInformationOfCampaignOfOrganisation(@PathVariable("id") Long id,
                                                                                    @RequestParam("campaign_name") String campaign_name) {
         var campaign_opt = campaignService.findCampaignByNameAndOrganisationId(campaign_name, id);
+        if (campaign_opt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(displayService.campaignToDisplay(campaign_opt.get()));
+        }
+    }
+
+    @GetMapping("/{id}/campaign/{cid}")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#id.toString() + 'ADMIN') or hasAuthority(#id.toString() + 'USER')")
+    @ResponseBody
+    public ResponseEntity<DisplayCampaign> findInformationOfCampaignOfOrganisationById(@PathVariable("id") Long id,
+                                                                                       @PathVariable("cid") Long cid) {
+        var campaign_opt = campaignService.findCampaignByIdAndOrganisationId(cid, id);
         if (campaign_opt.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
