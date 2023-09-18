@@ -3,7 +3,7 @@ version: '3.5'
 services:
   postgres:
     container_name: pg_container
-    image: postgres
+    image: postgres:15
     restart: always
     environment:
       DATABASE_HOST: 172.0.0.1
