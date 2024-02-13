@@ -138,12 +138,13 @@ public class UserEndpoint {
     @PostMapping(path = "/")
     @ResponseBody
     public ResponseEntity<String> createUser(@RequestBody CampUser user) throws URISyntaxException {
+        System.out.println("CREANT USER");
         var user_o = userService.findUserByUsername(user.getUsername());
         if (user_o.isPresent()) {
             return ResponseEntity.badRequest().build();
         } else {
-            // TODO Reactivar aixo quan funcioni tot
-            // userService.saveUser(user);
+            userService.saveUser(user);
+            System.out.println("CREAT USER");
             return ResponseEntity.created(new URI("/users/")).build();
         }
     }
