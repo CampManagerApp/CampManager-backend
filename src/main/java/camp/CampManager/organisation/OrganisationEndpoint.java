@@ -95,7 +95,7 @@ public class OrganisationEndpoint {
     }
 
     @PostMapping(path = "/")
-    @PreAuthorize("hasAuthority('SUPERADMIN')")
+    //@PreAuthorize("hasAuthority('SUPERADMIN')")
     @ResponseBody
     public ResponseEntity<Organisation> createOrganisation(@RequestBody Organisation organisation) throws Exception {
         organisationService.createOrganisation(organisation);

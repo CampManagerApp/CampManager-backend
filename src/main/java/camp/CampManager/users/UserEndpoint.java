@@ -89,7 +89,7 @@ public class UserEndpoint {
     }
 
     @PostMapping(path = "/role/")
-    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#input.get(\"orgname\") + 'ADMIN')")
+    @PreAuthorize("hasAuthority('SUPERADMIN') or hasAuthority(#input.get(\"orgname\") + 'ADMIN') or #input.get(\"username\") == #input.get(\"orgname\")")
     @ResponseBody
     public ResponseEntity<String> createMembershipOfUser(@RequestBody Map<String, String> input) throws URISyntaxException {
         var username = input.get("username");
@@ -138,13 +138,11 @@ public class UserEndpoint {
     @PostMapping(path = "/")
     @ResponseBody
     public ResponseEntity<String> createUser(@RequestBody CampUser user) throws URISyntaxException {
-        System.out.println("CREANT USER");
         var user_o = userService.findUserByUsername(user.getUsername());
         if (user_o.isPresent()) {
             return ResponseEntity.badRequest().build();
         } else {
             userService.saveUser(user);
-            System.out.println("CREAT USER");
             return ResponseEntity.created(new URI("/users/")).build();
         }
     }
