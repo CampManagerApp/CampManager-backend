@@ -1,6 +1,7 @@
 package camp.CampManager.organisation.campaign.tables.restrictions;
 
 import camp.CampManager.organisation.campaign.counsellors.Counsellor;
+import camp.CampManager.organisation.campaign.counsellors.Group;
 import camp.CampManager.organisation.campaign.tables.CampTable;
 import camp.CampManager.users.Gender;
 import lombok.Getter;
@@ -45,6 +46,11 @@ public class SpecialRestriction extends Restriction {
                     }
                     case "is_first_year" -> {
                         if (!counsellor.is_first_year() == Boolean.parseBoolean(desiredAttributeValue)) {
+                            add = false;
+                        }
+                    }
+                    case "group" -> {
+                        if (!counsellor.getGroup().equals(Group.valueOf(desiredAttributeValue))) {
                             add = false;
                         }
                     }

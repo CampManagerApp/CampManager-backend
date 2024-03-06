@@ -79,6 +79,9 @@ public class CounsellorService {
         } else {
             counsellor_builder.is_first_year(false);
         }
+        if (input.containsKey("group")) {
+            counsellor_builder.group(Group.valueOf(input.get("group")));
+        }
         if (input.containsKey("emergencyPhone")) {
             counsellor_builder.emergencyPhone(Integer.parseInt(input.get("emergencyPhone")));
         }

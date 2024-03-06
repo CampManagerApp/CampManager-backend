@@ -25,6 +25,7 @@ public class Counsellor {
     private String fullName;
     private Gender gender;
     private Date birthday;
+    private Group group;
 
     private boolean is_first_year;
 
