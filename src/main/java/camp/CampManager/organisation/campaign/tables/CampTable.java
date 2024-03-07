@@ -41,6 +41,9 @@ public class CampTable {
     @Transient
     private List<Counsellor> counsellors;
 
+    @Transient
+    private List<String> emptySlots;
+
     private String tableName;
     private String status;
 

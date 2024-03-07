@@ -80,7 +80,7 @@ public class CounsellorService {
             counsellor_builder.is_first_year(false);
         }
         if (input.containsKey("group")) {
-            counsellor_builder.group(Group.valueOf(input.get("group")));
+            counsellor_builder.bigGroup(Group.valueOf(input.get("bigGroup")));
         }
         if (input.containsKey("emergencyPhone")) {
             counsellor_builder.emergencyPhone(Integer.parseInt(input.get("emergencyPhone")));

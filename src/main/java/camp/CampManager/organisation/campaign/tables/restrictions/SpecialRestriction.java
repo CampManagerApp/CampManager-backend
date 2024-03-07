@@ -49,8 +49,8 @@ public class SpecialRestriction extends Restriction {
                             add = false;
                         }
                     }
-                    case "group" -> {
-                        if (!counsellor.getGroup().equals(Group.valueOf(desiredAttributeValue))) {
+                    case "bigGroup" -> {
+                        if (!counsellor.getBigGroup().equals(Group.valueOf(desiredAttributeValue))) {
                             add = false;
                         }
                     }

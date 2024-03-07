@@ -132,6 +132,14 @@ public class TableEndpoint {
             counsellors.forEach(listCounsellor::add);
             buildingTable.counsellors(listCounsellor);
         }
+        // Empty slots as a string list split by ;
+        if (input.containsKey("emptySlots")) {
+            var emptySlots = input.get("emptySlots");
+            var emptySlotsList = emptySlots.split(";");
+            buildingTable.emptySlots(new LinkedList<>(List.of(emptySlotsList)));
+        } else {
+            buildingTable.emptySlots(new LinkedList<>());
+        }
         return tableService.createNewTableInCampaign(orgId, campId, buildingTable.build(), response);
     }
 

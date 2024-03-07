@@ -14,9 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Transactional
@@ -73,7 +71,11 @@ public class TableService {
         table.setCounsellor_ids(cIds);
         table.setCampaignId(campId);
         table.setStatus("CREATED");
-        table.setGrid(new HashMap<>());
+        Map<String, Set<String>> grid = new HashMap<>();
+        for (String slot : table.getEmptySlots()) {
+            grid.put(slot, new HashSet<>(List.of("-")));
+        }
+        table.setGrid(grid);
         tableRepository.save(table);
         return ResponseEntity.created(new URI("/organisation/id/campaign/id/tables")).body(table);
     }
