@@ -161,7 +161,7 @@ public class TableService {
     }
 
     public List<Counsellor> parseCounsellors(String counsellors, Campaign campaign) {
-        if (counsellors == null || counsellors.length() == 0) {
+        if (counsellors == null || counsellors.isEmpty()) {
             return new LinkedList<>();
         }
         List<Counsellor> counsellorList = new LinkedList<>();
