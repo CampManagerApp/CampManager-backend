@@ -71,13 +71,15 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
                     Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
                     stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
+                    System.out.println(authorities);
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(username, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     filterChain.doFilter(request, response);
                 } catch (Exception exception) {
+                    exception.printStackTrace();
                     response.setHeader("error", exception.getMessage());
-                    response.sendError(FORBIDDEN.value());
+                    response.sendError(420);
                 }
             } else {
                 filterChain.doFilter(request, response);
