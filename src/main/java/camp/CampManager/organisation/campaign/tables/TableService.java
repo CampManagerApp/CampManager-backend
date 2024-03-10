@@ -86,7 +86,13 @@ public class TableService {
             return ResponseEntity.notFound().build();
         }
         var table_o = tableRepository.findByCampaignIdAndTableNameEquals(campId, tableName);
-        return table_o.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        if (table_o.isPresent()) {
+            var table = table_o.get();
+            this.populateTable(table);
+            return ResponseEntity.ok(table);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     public ResponseEntity<String> deleteTableByName(Long orgId, Long campId, String tableName) {
